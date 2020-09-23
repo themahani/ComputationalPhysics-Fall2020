@@ -7,28 +7,61 @@
 """
 import numpy as np
 import matplotlib.pyplot as plt
+from sys import argv
 
-# Make first row to act as the Initiallizer
-first = [0] * 201
-first[100] = 1
+def put_hats(rounds):
+    # Make first row to act as the Initiallizer
+    first = [0] * 201
+    first[100] = 1
 
-# Number of steps for the program to run
-steps = 10
+    # Number of steps for the program to run
+    steps = rounds
 
-canvas = np.ndarray(shape=(steps + 1, 201), dtype=int, order='F')
-canvas[0] = first[:]
+    canvas = np.ndarray(shape=(steps + 1, 201), dtype=int, order='F')
+    canvas[0] = first[:]
 
-for rnd in range(1, steps + 1):
-    for index in range(201):
-        if index == 200:
-            if canvas[rnd - 1][index - 1] + canvas[rnd - 1][0] == 1:
-                canvas[rnd][index] = 1
+    # At every round, look at the previous row and decide to be 0 or 1
+    for rnd in range(1, steps + 1):
+        for index in range(201):
+            # If you're at the end, your right neighbor is index = 0
+            # If you're at index = 0, you use index -1 for the left neighbor
+            # that points to the end of the row
+            if index == 200:
+                if canvas[rnd - 1][index - 1] + canvas[rnd - 1][0] == 1:
+                    canvas[rnd][index] = 1
+                else:
+                    canvas[rnd][index] = 0
+            # Otherwise, it's normal procedure...
             else:
-                canvas[rnd][index] = 0
-        else:
-            if canvas[rnd - 1][index - 1] + canvas[rnd - 1][index + 1] == 1:
-                canvas[rnd][index] = 1
-            else:
-                canvas[rnd][index] = 0
+                if canvas[rnd - 1][index - 1] + canvas[rnd - 1][index + 1] == 1:
+                    canvas[rnd][index] = 1
+                else:
+                    canvas[rnd][index] = 0
 
-print(canvas[10])
+    # Output canvas as an Image
+    fig = plt.figure()
+    ax = plt.axes()
+
+    ax.pcolormesh(canvas)
+
+    # Labels and Titles
+    ax.set_title('Evolution of Hats in a row')
+    ax.set_xlabel("Hats")
+    ax.set_ylabel("Rounds passed")
+    fig.tight_layout()
+
+    plt.savefig("Hats" + str(steps) + ".jpg", dpi=500, bbox_inches='tight')
+
+
+def main():
+    # If no args >> WTF?!
+    if len(argv) != 2:
+        print("Wrong input... Please Enter the number of rounds:")
+    else:
+        rounds = int(argv[1])
+
+        put_hats(rounds)
+
+
+if __name__ == "__main__":
+    main()
