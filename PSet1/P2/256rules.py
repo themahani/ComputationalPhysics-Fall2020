@@ -18,7 +18,7 @@ def state(row, i):
 
 def choice(st, rule):
     # Takes the rule and the state, and returns a boolean as choice
-    return int(rule[st])
+    return int(rule[-1 - st])
 
 
 def figout(canvas):
@@ -26,7 +26,7 @@ def figout(canvas):
     fig = plt.figure()
     ax = plt.axes()
 
-    ax.pcolormesh(canvas)
+    ax.pcolormesh(canvas, linewidth=0.1, edgecolor='k')
 
     # Labels and Titles
     ax.set_title('Evolution of Hats in a row')
@@ -34,7 +34,7 @@ def figout(canvas):
     ax.set_ylabel("Rounds passed")
     fig.tight_layout()
 
-    plt.savefig("Hats" + str(canvas.shape[0]) + ".jpg",
+    plt.savefig("Hats" + str(canvas.shape[0] - 1) + ".jpg",
                 dpi=500, bbox_inches='tight')
 
 
