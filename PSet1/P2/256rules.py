@@ -26,7 +26,7 @@ def figout(canvas):
     fig = plt.figure()
     ax = plt.axes()
 
-    ax.pcolormesh(canvas, linewidth=0.1, edgecolor='k')
+    ax.pcolormesh(canvas, linewidth=0.2, edgecolor='k')
 
     # Labels and Titles
     ax.set_title('Evolution of Hats in a row')
