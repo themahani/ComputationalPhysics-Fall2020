@@ -2,7 +2,6 @@
 
 """This is the Program for generating CA models."""
 
-from sys import argv
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -10,15 +9,14 @@ import matplotlib.pyplot as plt
 def state(row, i):
     """This function takes in the current row and the index of the item,
        and returns its state as and 0 =< integer =< 7 """
-    if i == 200:
-        return row[i - 1] * 4 + row[i] * 2 + row[0]
-    else:
-        return row[i - 1] * 4 + row[i] * 2 + row[i + 1]
+    length = len(row)
+    return row[i - 1] * 4 + row[i] * 2 + row[(i + 1) % length]
 
 
-def choice(st, rule):
+def choice(m_state, rule):
     """Takes the rule and the state, and returns a boolean as choice"""
-    return int(rule[st])
+    return int(rule[m_state])
+
 
 def evolve(rule, steps):
     """This function, creates a cell array of size 201,
