@@ -21,12 +21,12 @@ def evolve(rule, steps):
     # Initialize the array of cells
     first = [0] * 201
     first[100] = 1
-    table = np.ndarray(shape=(steps + 1, 201), dtype=int, order='F')
+    table = np.zeros(shape=(steps + 1, 201), dtype=int, order='F')
     table[0] = first.copy()
 
     # Find the evolution of the array for <steps> number of rounds
     for rnd in range(1, steps + 1):
-        for i in range(200):
+        for i in range(201):
             if choice(state(table[rnd - 1], i), rule):
                 table[rnd][i] = 1
             else:
