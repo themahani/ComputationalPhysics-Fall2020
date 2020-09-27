@@ -3,6 +3,8 @@
 							left=0.5in,right=0.5in,top=0.5in,bottom=0.5in,%
 							footskip=.25in]{geometry}
 \usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amssymb}
 \usepackage{hyperref}
 
 \title{PSet1 Report}
@@ -28,6 +30,18 @@
     \subsection{Fancy}
     The style of which I have written this code is to be able to import the functions, if I
     need them in the future. All that the last \texttt{if} statement does, is to see if we are executing this file, and then, execute the \texttt{main()} function.
+    
+    \subsection{Analysis}
+    The main part of the code is the \texttt{put\_hat()} function, which consists mainly of two
+    nested \texttt{for} loops. taking one to have $m$ iterations and the other, $n$, we can see 
+    that the runtime complexity of this code is $\mathcal{O}(m.n)$.
+    In order to analyze this code, one can run a profiler on it as follows:
+    \begin{lstlisting}[language=bash]
+    	python -m cProfile -s time Hats.py
+    \end{lstlisting}
+	Note that this profiler lists all the modules that are being called, so due to our use of \texttt{numpy} and \texttt{matplotlib.pyplot}, it will show a lot of things, but the main 
+	function \texttt{put\_hats} will be at the top few.
+    
 	
 	\subsection{Results}
 	I used the \texttt{pcolormesh()} module from the \texttt{matplotlib.pyplot} library to

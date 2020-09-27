@@ -37,7 +37,11 @@ def put_hats(rounds):
                     canvas[rnd][index] = 1
                 else:
                     canvas[rnd][index] = 0
+    return canvas
 
+
+def figout(canvas, steps):
+    """draws canvas using pcolormesh and outputs it to an image file"""
     # Output canvas as an Image
     fig = plt.figure()
     ax = plt.axes()
@@ -54,13 +58,10 @@ def put_hats(rounds):
 
 
 def main():
-    # If no args >> WTF?!
-    if len(argv) != 2:
-        print("Wrong input... Please Enter the number of rounds:")
-    else:
-        rounds = int(argv[1])
+    """The main body"""
+    rounds = 200
 
-        put_hats(rounds)
+    figout(put_hats(rounds), rounds)
 
 
 if __name__ == "__main__":
