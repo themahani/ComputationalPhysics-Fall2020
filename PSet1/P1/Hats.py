@@ -49,7 +49,7 @@ def put_hats(rounds):
     ax.set_xlabel("Hats")
     ax.set_ylabel("Rounds passed")
     fig.tight_layout()
-
+    # Save the image into a file
     plt.savefig("Hats" + str(steps) + ".jpg", dpi=500, bbox_inches='tight')
 
 
