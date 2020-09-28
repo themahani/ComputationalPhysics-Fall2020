@@ -16,4 +16,4 @@ def figout(canvas, rule):
     ax.set_ylabel("Rounds passed")
     fig.tight_layout()
 
-    plt.savefig("Hats" + str(rule) + ".jpg", dpi=500, bbox_inches='tight')
+    plt.savefig("Hats" + str(rule) + ".jpg", dpi=300, bbox_inches='tight')
