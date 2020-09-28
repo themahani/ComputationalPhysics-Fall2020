@@ -2,8 +2,12 @@
 
 """ This program models the game of life problem.  """
 
-from types import loaf, beacon, glider, eater_glider
-from operations import situate, choose
+from classes.types import loaf, beacon, glider, eater_glider
+from classes.graphics import animate
+
+
+# quad.set_array(c_glider.ravel())
+# return quad,
 
 
 def main():
@@ -12,14 +16,10 @@ def main():
     c_beacon = beacon()
     c_glider = glider()
     c_eater_glider = eater_glider()
-
-
-def animate(canvas):
-    """Animates the table and saves the file as a gif"""
-    for i in range(6):
-        for j in range(6):
-            situation = situate(canvas, i, j)
-            choose(situation, canvas[i][j])
+    animate(c_beacon, "beacon")
+    animate(c_loaf, "loaf")
+    animate(c_glider, "glider")
+    animate(c_eater_glider, "eater_glider")
 
 
 if __name__ == "__main__":

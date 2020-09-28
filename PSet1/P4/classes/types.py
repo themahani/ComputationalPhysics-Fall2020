@@ -32,13 +32,12 @@ def beacon():
 
 def glider():
     """Create the canvas with the initial values of the glider"""
-    canvas = np.zeros(shape=(6, 6), dtype=int, order='F')
+    canvas = np.zeros(shape=(10, 10), dtype=int, order='F')
     # make the glider
     canvas[2][3] = 1
     canvas[3][3] = 1
     canvas[4][3] = 1
     canvas[4][2] = 1
-    canvas[3][4] = 1
     canvas[3][1] = 1
     return canvas
 
