@@ -19,7 +19,7 @@ def iterate(rule):
     for i in range(len(rule)):
         new_rule = rule[:i] + bit_flip(rule[i]) + rule[i + 1:]
         # Default number of steps is 200
-        figout(evolve(new_rule, 200), new_rule)
+        figout(evolve(new_rule, 300), new_rule)
 
 
 def main():

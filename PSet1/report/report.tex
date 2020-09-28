@@ -62,7 +62,8 @@
 	As for analysis, one can use the code used in section\ref{sec:analysis} to run a profiler on the main functions. But the algorithm used is the same as the one before.
 	
 	\subsection{Results}
-	Using the \texttt{graphics.py} module we output the file with its rule number in binary as its name. The result are included in Fig \ref{fig:2rules}
+	Using the \texttt{graphics.py} module we output the file with its rule number in binary as its name. The result are included in Fig \ref{fig:2rules}.   As one can see, the CA rule 75 makes a chaotic-looking pattern meaning that
+	it's classified in \textbf{Class 3} in Wolfram, while rule 110 leads to a comples pattern that seems to repeat itself locally, hence in \textbf{Class 4} in Wolfram.
 	\begin{figure}[h!]
 		\includegraphics[width=0.45\linewidth]{../P2/Hats01001011.jpg}
 		\includegraphics[width=0.45\linewidth]{../P2/Hats01101110.jpg}
@@ -78,8 +79,9 @@
 	\texttt{iteration\_bitflip.py}. This time we take rule 110 and iterate over its digits and do a
 	bit flip for each one. Then we make the CA for that rule and output it as before.
 	\subsection{Results}
-	The result are the same as the ones in question in the assignment. 
-	(Figure \ref{fig:bitflip})
+	The result are the same as the ones in question in the assignment.
+	(Figure \ref{fig:bitflip}) As one can see, rules \texttt{00101110}, \texttt{01101010}, \texttt{01101100} are Class 2 CAs and  rules \texttt{01001110}, \texttt{11101110}, \texttt{01100110} 
+	are class 4 CAs, while \texttt{01101111}, \texttt{01111110} seem chaotic and are classified as Class 3 CAs.
 	
 	\begin{figure}[h!]
 		\includegraphics[width=0.4\linewidth]{../P3/Hats00101110.jpg}
