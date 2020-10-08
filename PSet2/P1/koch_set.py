@@ -16,9 +16,14 @@ def next_level(drawer, current, level):
     go to the next level of the fractal and draw it.
     """
     if current < level:
-        drawer.left(60)
-        drawer.forward(100 // 2 ** level)
+        # drawer.forward(100 // 2 ** level)
         next_level(drawer, current + 1, level)
+        drawer.left(60)
+        next_level(drawer, current + 1, level)
+        drawer.left(60)
+        # drawer.forward(100 // 2 ** level)
+    else:
+        drawer.forward(100 // 2 ** level)
         drawer.right(120)
         drawer.forward(100 // 2 ** level)
 
@@ -35,10 +40,8 @@ def draw_koch(level):
     koch.color('cyan')
     koch.pensize(1)
     koch.speed(1)
-    koch.forward(100 // 2 ** level)
     next_level(koch, 0, level)
     koch.left(60)
-    koch.forward(100 // 2 ** level)
     input(">>> Done!")
 
 
@@ -47,7 +50,8 @@ def main():
     The main body of the program
     """
     depth = int(argv[1])
-    turtle.Screen()
+    scr = turtle.Screen()
+    scr.bgcolor('black')
     draw_koch(depth)
 
 if __name__ == "__main__":
