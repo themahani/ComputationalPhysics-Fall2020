@@ -6,6 +6,23 @@ And also some errorbar calculations
 import numpy as np
 
 
+def deposite_particle(table, table_hei, index, color):
+    """
+    Smash the particle using the additional relaxation rule
+    """
+    i_min = index
+    length = len(table_hei)
+    # Find the one of 3 pillars with min height
+    if table_hei[index] > table_hei[(index + 1) % length]:
+        i_min = (index + 1) % length
+    elif table_hei[index] < table_hei[index - 1]:
+        i_min = index - 1
+    # Update height of pillar
+    table_hei[i_min] += 1
+    # Smash particle inplace
+    table[table_hei[i_min], i_min] = color
+
+
 def generate_dep(layer_count, mean_heights, height_var, ind):
     """
     generate the deposition once
@@ -22,11 +39,9 @@ def generate_dep(layer_count, mean_heights, height_var, ind):
     for _ in range(layer_count * 10 * length):
         # Generate the random position to drop the particle
         rand = np.random.randint(0, length)
-        # Take note of the new height of the pillar of particles
-        canvas_height[rand] += 1
         count += 1
         # Smash the particle in place
-        canvas[canvas_height[rand]][rand] = color_map
+        deposite_particle(canvas, canvas_height, rand, color_map)
         # Change the color every 10 * length drops
         if count == length * 10:
             color_map = - color_map
