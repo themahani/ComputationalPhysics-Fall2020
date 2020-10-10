@@ -15,7 +15,7 @@ def draw_canvas(canvas, max_height):
     fig, ax = plt.subplots(1, 1)
     ax.pcolor(canvas, cmap="Blues")
     ax.set_ylim(0, np.max(max_height) + 10)
-    # plt.show()
+    # Save to fig
     plt.savefig("canvas.jpg", dpi=500, bbox_inches='tight')
 
 
@@ -52,13 +52,16 @@ def draw_variance(variance):
     # Find the curve fit and plot it
     popt, pcov = find_opt(power_func, means)
     y_fit = popt[0] * np.power(x_coord, popt[1])
-    plt.plot(x_coord, y_fit, ls='-.', color='green', label='Curve fit')
+    plt.plot(x_coord, y_fit, ls='-.', color='green',
+             label='Curve fit (a * x^beta)')
     # Log scale for x- and y-axis
     plt.xscale('log')
     plt.yscale('log')
+    # axis labels
+    ax.set_xlabel("Time (unit = number of particles depositted)")
     # Show legend
     plt.legend()
-    # plt.show()
+    # Save to fig
     plt.savefig("plot_for_beta.jpg", dpi=500, bbox_inches='tight')
     # Calculate standard deviation for params (sqrt of the diagonal
     # of the covariance)
