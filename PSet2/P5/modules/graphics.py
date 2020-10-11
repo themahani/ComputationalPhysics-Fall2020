@@ -15,6 +15,7 @@ def draw_canvas(canvas, max_height):
     fig, ax = plt.subplots(1, 1)
     ax.pcolor(canvas, cmap="RdBu")
     ax.set_ylim(0, np.max(max_height) + 10)
+    ax.set_title("Ballistic Deposition with Relaxation")
     # Save to fig
     plt.savefig("canvas.jpg", dpi=500, bbox_inches='tight')
 
