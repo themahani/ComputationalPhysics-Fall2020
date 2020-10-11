@@ -15,7 +15,7 @@ def deposite_particle(table, table_hei, index, color):
     # Find the one of 3 pillars with min height
     if table_hei[index] > table_hei[(index + 1) % length]:
         i_min = (index + 1) % length
-    elif table_hei[index] < table_hei[index - 1]:
+    elif table_hei[i_min] > table_hei[index - 1]:
         i_min = index - 1
     # Update height of pillar
     table_hei[i_min] += 1
@@ -70,7 +70,6 @@ def generate_deposition(layers):
     for i in range(n):
         canvas, max_height, mean_hei, hei_var = generate_dep(layers, mean_heights, height_var, i)
 
-
     return canvas, max_height, mean_hei, hei_var
 
 
@@ -78,4 +77,4 @@ def error(array):
     """
     return variance over the number of items as error
     """
-    return np.var(array) / len(array)
+    return np.var(array)
