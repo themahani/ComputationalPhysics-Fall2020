@@ -1,25 +1,14 @@
 """
 Modules to draw the triangles
 """
-import turtle
+from matplotlib import pyplot as plt
 
 
-def draw_triangle(trt, x_coord, y_coord, level):
+def draw_triangle(x_coord, y_coord):
     """
     Set the position of the turtle at Coordinates:
     x_coord (left / right), y_coord (up / down)
     """
-    # Set the cursor at the top vertex
-    trt.up()
-    trt.setpos(x_coord, y_coord)
-    trt.down()
-    length = 200.0 / level
+    plt.fill(x_coord, y_coord, 'b')
 
     # Now draw with fill
-    trt.right(60)
-    trt.begin_fill()
-    for _ in range(3):
-        trt.forward(length)
-        trt.right(120)
-    trt.end_fill()
-    trt.left(60)

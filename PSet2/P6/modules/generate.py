@@ -36,7 +36,7 @@ def generate_dep(layer_count, mean_heights, height_var, ind):
     """
     # Initialize everything
     length = 200        # length of the surface
-    canvas = np.zeros(shape=(1000, length), dtype=int)   # The canvas
+    canvas = np.zeros(shape=(40 * layer_count, length), dtype=int)   # The canvas
     # Store the particle height of every position on the surface.
     canvas_height = np.zeros(shape=(length,), dtype=int, order='F')
     color_map = 1   # The color of the particles. Changes every 2000 particles
@@ -50,9 +50,10 @@ def generate_dep(layer_count, mean_heights, height_var, ind):
         # Smash the particle in place
         deposite_particle(canvas, canvas_height, rand, color_map)
         # Change the color every 10 * length drops
-        if count == length * 10:
+        if count % (length * 10) == 0:
             color_map = - color_map
-            count = 0
+
+        if count == 200 * 2 ** (index + 1):
             # Update list of mean heights
             mean_heights[ind, index] = np.mean(canvas_height)
             # take Root Mean Squared (RMS) as height unsteadiness
@@ -70,8 +71,9 @@ def generate_deposition(layers):
     """
     # Initialize
     n = 10
-    mean_heights = np.zeros((n, layers))
-    height_var = np.zeros((n, layers))
+    size = int(np.log2((2000 * layers) / 200))
+    mean_heights = np.zeros((n, size))
+    height_var = np.zeros((n, size))
 
     # Repeat the process for n times
     for i in range(n):
@@ -82,6 +84,6 @@ def generate_deposition(layers):
 
 def error(array):
     """
-    return variance over the number of items as error
+    return stdev of items as error
     """
-    return np.var(array) / len(array)
+    return np.sqrt(np.var(array))

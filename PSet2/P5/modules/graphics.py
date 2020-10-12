@@ -13,7 +13,7 @@ def draw_canvas(canvas, max_height):
     Draw the given table
     """
     fig, ax = plt.subplots(1, 1)
-    ax.pcolor(canvas, cmap="RdBu")
+    ax.pcolor(canvas, cmap="Blues")
     ax.set_ylim(0, np.max(max_height) + 10)
     ax.set_title("Ballistic Deposition with Relaxation")
     # Save to fig
