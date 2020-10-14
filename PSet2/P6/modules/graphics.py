@@ -37,18 +37,21 @@ def draw_variance(x_axis, variance):
                 markersize=5, markerfacecolor='red', markeredgecolor='black',
                 markeredgewidth=0.2, label='scatter data')
     # Find the curve fit and plot it
-    popt , pcov = np.polyfit(np.log10(x_axis), np.log10(means), 1,
-                             full=False, cov=True)
+    popt, pcov = np.polyfit(np.log10(x_axis), np.log10(means), 1,
+                            full=False, cov=True)
 
     # Make the fitted data
     y_fit = np.zeros((x_axis.shape[0], ), dtype=float, order='F')
+    # y_fit = popt[1] * np.power(x_axis, popt[0])
     for i in range(x_axis.shape[0]):
-        y_fit[i] = popt[1] * (x_axis[i] ** popt[0])
-    ax.plot(x_axis[:14], y_fit[:14], color='green',
-            label='Curve fit (a * x^beta)')
+        y_fit[i] = popt[1] + (x_axis[i] * popt[0])
+    print("Values for y_fit: \n", y_fit)
+    print("Values for popt:\n", popt)
+    # ax.plot(x_axis, y_fit, color='green',
+    #         label='Curve fit (a * x^beta)')
     # Log scale for x- and y-axis
-    plt.xscale('log')
-    plt.yscale('log')
+    ax.set_xscale('log')
+    ax.set_yscale('log')
     # axis labels
     ax.set_xlabel("Time (unit = number of particles depositted)")
     # Show legend

@@ -23,12 +23,11 @@ def deposite_particle(table, table_hei, index, color):
     table[table_hei[i_min], i_min] = color
 
 
-def generate_dep(layer_count, mean_heights, height_var, x_coord, ind):
+def generate_dep(length, layer_count, mean_heights, height_var, x_coord, ind):
     """
     generate the deposition once
     """
     # Initialize everything
-    length = 200        # length of the surface
     # Make the canvas: Take the height to be two layers more just to be safe
     canvas = np.zeros(shape=((layer_count + 2) * 10, length), dtype=int)
     # Store the particle height of every position on the surface.
@@ -61,22 +60,21 @@ def generate_dep(layer_count, mean_heights, height_var, x_coord, ind):
     return canvas, np.max(canvas_height), x_coord, mean_heights, height_var
 
 
-def generate_deposition(layers):
+def generate_deposition(length, layers):
     """
     Takes the layer count to deposite on the surface
     and outputs a list of mean height.
     """
     # Initialize
     n = 10
-    size = int(np.log2(2000 * layers))
+    size = int(np.log2(10 * length * layers))
     mean_heights = np.zeros((n, size))
     height_var = np.zeros((n, size))
     x_coord = np.zeros((size, ))
 
-
     # Repeat the process for n times
     for i in range(n):
-        canvas, max_height, x_coor, mean_hei, hei_var = generate_dep(layers, mean_heights, height_var,x_coord, i)
+        canvas, max_height, x_coor, mean_hei, hei_var = generate_dep(length, layers, mean_heights, height_var,x_coord, i)
 
     return canvas, max_height, x_coor, mean_hei, hei_var
 
