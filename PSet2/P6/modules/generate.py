@@ -30,13 +30,13 @@ def deposite_particle(table, table_hei, index, color):
         table[table_hei[index], index] = color
 
 
-def generate_dep(layer_count, mean_heights, height_var, ind):
+def generate_dep(layer_count, x_coord, mean_heights, height_var, ind):
     """
     generate the deposition once
     """
     # Initialize everything
     length = 200        # length of the surface
-    canvas = np.zeros(shape=(40 * layer_count, length), dtype=int)   # The canvas
+    canvas = np.zeros(shape=(40 * layer_count, length), dtype=int)
     # Store the particle height of every position on the surface.
     canvas_height = np.zeros(shape=(length,), dtype=int, order='F')
     color_map = 1   # The color of the particles. Changes every 2000 particles
@@ -53,15 +53,17 @@ def generate_dep(layer_count, mean_heights, height_var, ind):
         if count % (length * 10) == 0:
             color_map = - color_map
 
-        if count == 200 * 2 ** (index + 1):
+        if count == 2 ** (index + 1):
             # Update list of mean heights
             mean_heights[ind, index] = np.mean(canvas_height)
             # take Root Mean Squared (RMS) as height unsteadiness
             height_var[ind, index] = np.sqrt(np.var(canvas_height))
+            # Take note of count
+            x_coord[index] = count
             # next index for the next time we reach here
             index += 1
 
-    return canvas, np.max(canvas_height), mean_heights, height_var
+    return canvas, np.max(canvas_height),x_coord, mean_heights, height_var
 
 
 def generate_deposition(layers):
@@ -71,15 +73,16 @@ def generate_deposition(layers):
     """
     # Initialize
     n = 10
-    size = int(np.log2((2000 * layers) / 200))
+    size = int(np.log2(2000 * layers))
     mean_heights = np.zeros((n, size))
     height_var = np.zeros((n, size))
+    x_coord = np.zeros((size, ))
 
     # Repeat the process for n times
     for i in range(n):
-        canvas, max_height, mean_hei, hei_var = generate_dep(layers, mean_heights, height_var, i)
+        canvas, max_height, x_ax, mean_hei, hei_var = generate_dep(layers, x_coord, mean_heights, height_var, i)
 
-    return canvas, max_height, mean_hei, hei_var
+    return canvas, max_height, x_ax, mean_hei, hei_var
 
 
 def error(array):

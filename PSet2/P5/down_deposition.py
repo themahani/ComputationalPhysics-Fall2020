@@ -15,11 +15,11 @@ def main():
     Main body of our program
     """
     print("==> Generating Deposition...\n")
-    table, max_height, mean_heights, height_vars = generate_deposition(50)
+    table, max_height, x_coord, mean_heights, height_vars = generate_deposition(50)
     print("==> Drawing canvas and saving to .jpg\n")
     draw_canvas(table, max_height)
     print("==> Drawing plot for beta and saving to .jpg\n")
-    params, errors = draw_variance(height_vars)
+    params, errors = draw_variance(x_coord, height_vars)
     # Report mean and unsteadiness
     print("List of mean heights is as follows: ")
     print(mean_heights[0])

@@ -15,7 +15,7 @@ def draw_canvas(canvas, max_height):
     fig, ax = plt.subplots(1, 1)
     ax.pcolor(canvas, cmap="Blues")
     ax.set_ylim(0, np.max(max_height) + 10)
-    ax.set_title("Ballistic Deposition with Relaxation")
+    ax.set_title("Random Deposition with Surface Relaxation")
     # Save to fig
     plt.savefig("canvas.jpg", dpi=500, bbox_inches='tight')
 
@@ -33,7 +33,7 @@ def find_opt(func, data):
     return popt_params, pcov_params
 
 
-def draw_variance(variance):
+def draw_variance(x_axis, variance):
     """
     Plot the variance after finding the error bars :)
     """
@@ -43,23 +43,23 @@ def draw_variance(variance):
     for _ in range(variance.shape[1]):
         yerr.append(error(variance[:, _]))
         means.append(np.mean(variance[:, _]))
-    x_coord = np.linspace(0, variance.shape[1] * 2000, variance.shape[1])
     # Make subplot
     fig, ax = plt.subplots(1, 1)
     # Plot with error bars, errorbar color is default(blue)
-    ax.errorbar(x_coord, means, yerr=yerr, ls='', marker='*',
+    ax.errorbar(x_axis, means, yerr=yerr, ls='', marker='*',
                 markersize=5, markerfacecolor='red', markeredgecolor='black',
                 markeredgewidth=0.2, label='scatter data')
     # Find the curve fit and plot it
     popt, pcov = find_opt(power_func, means)
-    y_fit = popt[0] * np.power(x_coord, popt[1])
-    plt.plot(x_coord, y_fit, ls='-.', color='green',
-             label='Curve fit (a * x^beta)')
+    y_fit = popt[0] * np.power(x_axis, popt[1])
+    # plt.plot(x_axis, y_fit, ls='-.', color='green',
+    #          label='Curve fit (a * x^beta)')
     # Log scale for x- and y-axis
     plt.xscale('log')
     plt.yscale('log')
     # axis labels
     ax.set_xlabel("Time (unit = number of particles depositted)")
+    ax.set_ylabel("Undteadiness")
     # Show legend
     plt.legend()
     # Save to fig

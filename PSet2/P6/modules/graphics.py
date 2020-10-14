@@ -20,20 +20,7 @@ def draw_canvas(canvas, max_height):
     plt.savefig("canvas.jpg", dpi=500, bbox_inches='tight')
 
 
-def power_func(x, a, beta):
-    return a * np.power(x, beta)
-
-
-def find_opt(func, data):
-    """
-    Find the optimization params form data and function
-    """
-    x_dummy = np.linspace(0, len(data) * 2000, len(data))
-    popt_params, pcov_params = curve_fit(func, x_dummy, data)
-    return popt_params, pcov_params
-
-
-def draw_variance(variance):
+def draw_variance(x_axis, variance):
     """
     Plot the variance after finding the error bars :)
     """
@@ -43,18 +30,22 @@ def draw_variance(variance):
     for _ in range(variance.shape[1]):
         yerr.append(error(variance[:, _]))
         means.append(np.mean(variance[:, _]))
-    x_coord = np.linspace(0, variance.shape[1] * 2000, variance.shape[1])
     # Make subplot
     fig, ax = plt.subplots(1, 1)
     # Plot with error bars, errorbar color is default(blue)
-    ax.errorbar(x_coord, means, yerr=yerr, ls='', marker='*',
+    ax.errorbar(x_axis, means, yerr=yerr, ls='', marker='*',
                 markersize=5, markerfacecolor='red', markeredgecolor='black',
                 markeredgewidth=0.2, label='scatter data')
     # Find the curve fit and plot it
-    popt, pcov = find_opt(power_func, means)
-    y_fit = popt[0] * np.power(x_coord, popt[1])
-    plt.plot(x_coord, y_fit, ls='-.', color='green',
-             label='Curve fit (a * x^beta)')
+    popt , pcov = np.polyfit(np.log10(x_axis), np.log10(means), 1,
+                             full=False, cov=True)
+
+    # Make the fitted data
+    y_fit = np.zeros((x_axis.shape[0], ), dtype=float, order='F')
+    for i in range(x_axis.shape[0]):
+        y_fit[i] = popt[1] * (x_axis[i] ** popt[0])
+    ax.plot(x_axis[:14], y_fit[:14], color='green',
+            label='Curve fit (a * x^beta)')
     # Log scale for x- and y-axis
     plt.xscale('log')
     plt.yscale('log')
