@@ -85,7 +85,7 @@
 	The values for length $L$, saturation width $w_s$ and saturation time $t_s$ is as follows:
 	\begin{equation*}
 		\begin{aligned}
-			L		 &= [10, 50, 100, 150, ]\\
+			L		 &= [10, 50, 100, 150, 200, 250]\\
 			t_s		&= [32, 3072, 16384, 49152, 131072, 1048276]\\
 			w_s	  &= [0.6, 1.1, 1.678, 2.725, 2.789, 3.558] 
 		\end{aligned}
@@ -108,6 +108,50 @@
 	\end{figure}
 	
 	\subsection{Ballistic Deposition}
+	The canvas for this part is shown in Fig\ref{fig:BD}.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.9\linewidth]{../P6/canvas.jpg}
+	\label{fig:BD}
+	\caption{deposit 20000 particles using the BD rule, change colors every 2000 particles and output the data.}
+\end{figure}
+In order to reach saturation we need
+at least about 50000 particles. to make the plot (Fig\ref{fig:BDplot}) I ran the simulation 10 times with 800
+layer deposits total. The value for $t_s$ was output by looking at the graph and getting
+the data that was closest to the values we were looking for.
+The value found for beta is:
+\begin{figure}[h!]
+	\includegraphics[width=0.9\linewidth]{../P6/plot_for_beta.jpg}
+	\label{fig:BDplot}
+	\caption{Plot log-log of roughness over time for BD with surface length 200 and 1000 layers laid. Data taken for every $2^n$ particles laid}
+\end{figure}
+\begin{equation*}
+	\beta = 0.44 \pm 0.02
+\end{equation*}
+The values for length $L$, saturation width $w_s$ and saturation time $t_s$ is as follows:
+\begin{equation*}
+	\begin{aligned}
+		L		 &= [10, 50, 100, 150, 200, 250]\\
+		t_s		&= [64, 1024, 3072, 4096, 8192, 32768]\\
+		w_s	  &= [1.5, 4.40, 5.5, 7.2, 7.5, 9.0] 
+	\end{aligned}
+\end{equation*}
+
+These values are plotted using the file \texttt{plots.py}. Plot fittings also happen there.
+
+Values found for $beta$ and $z$ are as follows:
+\begin{equation*}
+	\beta = 0.30 \pm 0.04, \quad z = 1.75 \pm 0.17  \Rightarrow \alpha \simeq 5.86
+\end{equation*}
+plots for $beta$ and $z$ are found in Fig\ref{fig:BDbeta_z}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.4\linewidth]{../P6/beta.jpg}
+	\includegraphics[width=.4\linewidth]{../P6/z.jpg}
+	\label{fig:BDbeta_z}
+	\caption{The left log-log plot is for $w_s$ over $t_s$ and the one on the right is for 
+		$t_s$ over length$L$. These plots are to measure $beta$, $z$ and $alpha$ in BD}
+\end{figure}
 	
 	\subsection{Competitive Ballistic Deposition}
 \end{document}

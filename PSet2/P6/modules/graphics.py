@@ -15,7 +15,7 @@ def draw_canvas(canvas, max_height):
     fig, ax = plt.subplots(1, 1)
     ax.pcolor(canvas, cmap="RdBu")
     ax.set_ylim(0, np.max(max_height) + 10)
-    ax.set_title("Ballistic Deposition with Relaxation")
+    ax.set_title("Ballistic Deposition")
     # Save to fig
     plt.savefig("canvas.jpg", dpi=500, bbox_inches='tight')
 
@@ -41,11 +41,11 @@ def draw_variance(x_axis, variance):
                             full=False, cov=True)
 
     # Make the fitted data
-    y_fit = np.zeros((x_axis.shape[0], ), dtype=float, order='F')
-    # y_fit = popt[1] * np.power(x_axis, popt[0])
-    for i in range(x_axis.shape[0]):
-        y_fit[i] = popt[1] + (x_axis[i] * popt[0])
-    print("Values for y_fit: \n", y_fit)
+    # y_fit = np.zeros((x_axis.shape[0], ), dtype=float, order='F')
+    # # y_fit = popt[1] * np.power(x_axis, popt[0])
+    # for i in range(x_axis.shape[0]):
+    #     y_fit[i] = popt[1] + (x_axis[i] * popt[0])
+    # print("Values for y_fit: \n", y_fit)
     print("Values for popt:\n", popt)
     # ax.plot(x_axis, y_fit, color='green',
     #         label='Curve fit (a * x^beta)')
@@ -54,6 +54,7 @@ def draw_variance(x_axis, variance):
     ax.set_yscale('log')
     # axis labels
     ax.set_xlabel("Time (unit = number of particles depositted)")
+    ax.set_ylabel("Roughness -- w(t)")
     # Show legend
     plt.legend()
     # Save to fig

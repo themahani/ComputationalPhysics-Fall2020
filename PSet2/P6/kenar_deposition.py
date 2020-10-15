@@ -15,7 +15,7 @@ def main():
     Main body of our program
     """
     print("==> Generating Deposition...\n")
-    table, max_height, x_coord, mean_heights, height_vars = generate_deposition(50)
+    table, max_height, x_coord, mean_heights, height_vars = generate_deposition(200, 1000)
     # print("==> Drawing canvas and saving to .jpg\n")
     # draw_canvas(table, max_height)
     print("==> Drawing plot for beta and saving to .jpg\n")
