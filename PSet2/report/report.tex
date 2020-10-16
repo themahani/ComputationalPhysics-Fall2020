@@ -16,6 +16,18 @@
 \begin{document}
 	\maketitle
 	\section{The Koch Fractal Set}
+	I used the \texttt{Turtle} tool in the \texttt{python} library set to draw the \emph{koch fractal set}. I made a class called \texttt{Koch} that takes in the 
+	\texttt{level} and \texttt{max\_level} as inputs and creates the koch fractal 
+	recursively. Then,
+	there's the \texttt{draw()} method in \texttt{Koch} that gets called recursively to draw the koch fractal.
+	I drew it to level 5 and output used a snipping tool to take a sceenshot of it.(Fig\ref{fig:koch})
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=.9\linewidth]{../P1/koch.png}
+		\label{fig:koch}
+		\caption{Koch fractal set, drawn to level 5. The length is reaching the pixel size
+			now.}
+	\end{figure}
 	\section{The Serpinski Fractal Set}
 		\subsection{Deterministic}
 		I created a class for \texttt{Serpinski} and a module to \texttt{add\_subset}. Then a module to recursively go through the \texttt{sub\_sets} and draws them using \texttt{plt.fill()}. This method is very
@@ -24,6 +36,7 @@
 		
 		The generated set with 8 levels of subsets is shown in Fig\ref{fig:serpDet}.
 		\begin{figure}[h!]
+			\centering
 			\includegraphics[width=.9\linewidth]{../P2/fractalstuff.jpg}
 			\label{fig:serpDet}
 		\end{figure}
@@ -54,7 +67,8 @@
 	\subsection{Random Deposition}
 	The graphics to lay 25 layers is shown in Fig \ref{fig:RD25}
 	\begin{figure}[h!]
-		\includegraphics[width=\linewidth]{../P4/canvas.jpg}
+		\centering
+		\includegraphics[width=.9\linewidth]{../P4/canvas.jpg}
 		\label{fig:RD25}
 		\caption{Randomly deposit particles on the surface of length 200 and change  color every 2000 particles you deposit. Do this for 50000 particles}
 	\end{figure}
@@ -64,7 +78,8 @@
 	\end{equation*}
 	And the plot is shown at Fig.\ref{fig:RD25beta}
 	\begin{figure}[h!]
-		\includegraphics[width=\linewidth]{../P4/plot_for_beta.jpg}
+				\centering
+		\includegraphics[width=.9\linewidth]{../P4/plot_for_beta.jpg}
 		\label{fig:RD25beta}
 		\caption{Take the stdev of height as roughness ($w(L, t)$) for every layer you deposit.
 		do this 10 times and find the error of each layer. Then plot and fit using 
@@ -84,6 +99,7 @@
 	the data that was closest to the values we were looking for.
 	The value found for beta is:
 	\begin{figure}[h!]
+		\centering
 		\includegraphics[width=0.9\linewidth]{../P5/plot_for_beta.jpg}
 		\label{fig:RDSRplot}
 		\caption{Plot log-log of roughness over time for RDSR}
@@ -130,6 +146,7 @@ layer deposits total. The value for $t_s$ was output by looking at the graph and
 the data that was closest to the values we were looking for.
 The value found for beta is:
 \begin{figure}[h!]
+	\centering
 	\includegraphics[width=0.9\linewidth]{../P6/plot_for_beta.jpg}
 	\label{fig:BDplot}
 	\caption{Plot log-log of roughness over time for BD with surface length 200 and 1000 layers laid. Data taken for every $2^n$ particles laid}
