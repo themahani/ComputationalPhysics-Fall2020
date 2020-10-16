@@ -18,6 +18,15 @@
 	\section{The Koch Fractal Set}
 	\section{The Serpinski Fractal Set}
 		\subsection{Deterministic}
+		I created a class for \texttt{Serpinski} and a module to \texttt{add\_subset}. Then a module to recursively go through the \texttt{sub\_sets} and draws them using \texttt{plt.fill()}. This method is very
+		inefficient. A better way is to append the coordinates to a single array recursively and then draw it. This
+		way makes it much faster. plt is so damn slow! (:face\_palming).
+		
+		The generated set with 8 levels of subsets is shown in Fig\ref{fig:serpDet}.
+		\begin{figure}[h!]
+			\includegraphics[width=.9\linewidth]{../P2/fractalstuff.jpg}
+			\label{fig:serpDet}
+		\end{figure}
 		\subsection{Randomized}
 	\section{Random Deposition}
 	\subsection{Intro}
