@@ -14,7 +14,7 @@ class Serpinski:
         self.subset = []
         self.level = level
         # Calculate for vertex positions
-        leng = 200.0 / level
+        leng = 200.0 / 2 ** level
         y_diff = leng * sqrt(3) / 2
         x_diff = leng / 2
         # Add vertices: [top, left, right]
@@ -29,17 +29,21 @@ class Serpinski:
             for item in self.subset:
                 item.add_subset()
         else:
+            # Calculate for vertex positions
+            leng = 200.0 / 2 ** (self.level + 1)
+            y_diff = leng * sqrt(3) / 2
+            x_diff = leng / 2
             # Make one at top
             self.subset.append(Serpinski(self.x_pos[0],
                                          self.y_pos[0],
                                          self.level + 1))
             # One at bottum left
-            self.subset.append(Serpinski(self.x_pos[1],
-                                         self.y_pos[1],
+            self.subset.append(Serpinski(self.x_pos[0] - x_diff,
+                                         self.y_pos[0] - y_diff,
                                          self.level + 1))
             # One at bottum right
-            self.subset.append(Serpinski(self.x_pos[2],
-                                         self.y_pos[2],
+            self.subset.append(Serpinski(self.x_pos[0] + x_diff,
+                                         self.y_pos[0] - y_diff,
                                          self.level + 1))
 
     def draw_me(self):
