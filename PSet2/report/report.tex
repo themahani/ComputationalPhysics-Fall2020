@@ -39,8 +39,22 @@
 			\centering
 			\includegraphics[width=.9\linewidth]{../P2/fractalstuff.jpg}
 			\label{fig:serpDet}
+			\caption{The level 8 serpinski fractal set.}
 		\end{figure}
 		\subsection{Randomized}
+		Here I added a module to the \texttt{Serpinski} class called \texttt{is\_bound()} which takes
+		the coordinates of the point and recursively justifies if the point is in the serpinski fractal
+		boundary. If yes, then I save the point coordinates. After I successfully find 50000 dots, I 
+		draw them using \texttt{plt.scatter(x, y, s=0.1)} where \texttt{s=0.1} refers to the markersize
+		which is set to 0.1 pt. Now Here's the Simulation for the level 8 fractal from the previous
+		subsection. (Fig \ref{fig:serpRAND})
+		\begin{figure}[h!]
+			\centering
+			\includegraphics[width=0.9\linewidth]{../P3/fractalstuff.jpg}
+			\label{fig:serpRAND}
+			\caption{find 50000 radom particles for the level 8 serpinski fractal from 
+				Fig\ref{fig:serpDet}}
+		\end{figure}
 	\section{Random Deposition}
 	\subsection{Intro}
 	In oder to work with Random Depostion, I made a function that generates the canvas,
@@ -120,9 +134,12 @@
 	
 	Values found for $beta$ and $z$ are as follows:
 	\begin{equation*}
-		\beta = 0.18 \pm 0.02, \qquad z = 2.97 \pm 0.24, \qquad \Rightarrow \alpha \simeq 16.16
+		\beta = 0.18 \pm 0.02, \qquad z = 2.97 \pm 0.24, \qquad \Rightarrow \alpha \simeq 0.547
 	\end{equation*}
 	plots for $beta$ and $z$ are found in Fig\ref{fig:beta_z}
+	
+	The theoretical value for $\beta$ is $0.24$ and alpha, $0.47$ which gives a percentile 
+	error of $\eta_\beta = 25\%$ and $\eta_\alpha = \%$ respectively
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=.4\linewidth]{../P5/beta.jpg}
@@ -167,9 +184,12 @@ These values are plotted using the file \texttt{plots.py}. Plot fittings also ha
 
 Values found for $beta$ and $z$ are as follows:
 \begin{equation*}
-	\beta = 0.30 \pm 0.04, \quad z = 1.75 \pm 0.17  \Rightarrow \alpha \simeq 5.86
+	\beta = 0.30 \pm 0.04, \quad z = 1.75 \pm 0.17  \Rightarrow \alpha \simeq 0.521
 \end{equation*}
 plots for $beta$ and $z$ are found in Fig\ref{fig:BDbeta_z}
+
+The theoretical value for $\beta$ is $0.21$ and alpha, $0.48$ which gives a percentile 
+error of $\eta_\beta = 43\%$ and $\eta_\alpha = 8.5\%$ respectively
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=.4\linewidth]{../P6/beta.jpg}

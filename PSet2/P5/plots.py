@@ -40,4 +40,4 @@ full_log_plot(lengths, t_s, "z")
 popt, pcov = full_log_optimize(lengths, t_s)
 print("z is: %.2f" % popt[0], " (+/-) %.2f" % pcov[0])
 z = popt[0]
-print("Means that alpha is: ", z / beta)
+print("Means that alpha is: ", z * beta)
