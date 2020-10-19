@@ -29,7 +29,7 @@ def randomize_sys(grid):
             grid[i, j] = gen_binary_rand()
 
 
-def main():
+def gen_rand_sys():
     """
     generate a grid with input size
     """
@@ -45,8 +45,8 @@ def main():
         # Randomize grid
         randomize_sys(grid)
         print(grid)
-        return 0
+        return grid
 
 
 if __name__ == "__main__":
-    main()
+    gen_rand_sys()
