@@ -23,14 +23,15 @@ def merge(grid, new, old):
 
 def find_cluster(grid, i, j):
     """ Find the cluster the item belongs to """
-    if i == 0:
+    is_on = grid[i, j] != 0
+    if i == 0 and is_on:
         if grid[i, j - 1] != 0:
             # Same cluster so same color
             grid[i, j] = grid[i, j - 1]
         else:
             front[0] += 1
             grid[i, j] = front[0]
-    else:
+    elif is_on:
         cond_a = grid[i, j - 1] != 0
         cond_b = grid[i - 1, j] != 0
         # if cluster around
@@ -79,9 +80,12 @@ def colorize(grid):
 def main():
     """ Main body """
     # Initialization
-    prob = 0.2
-    grid = gen_rand_sys(30, prob)
+    prob = 0.5
+    grid = gen_rand_sys(200, prob)
     c_grid = colorize(grid)
+    plt.pcolor(c_grid[:, 1:], edgecolor='white')
+    plt.colorbar()
+    plt.show()
     print(c_grid)
 
 
