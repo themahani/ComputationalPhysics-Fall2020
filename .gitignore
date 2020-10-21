@@ -81,7 +81,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
-*.ipynb 
+*.ipynb
 
 # IPython
 profile_default/
@@ -143,3 +143,12 @@ dmypy.json
 
 # PSet Upload files
 *.zip
+
+# ccls-cache ... :|
+.ccls-cache
+
+# cpp biproducts
+*.ii
+*.d
+*.s
+*.o

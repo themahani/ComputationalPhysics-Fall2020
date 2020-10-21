@@ -76,18 +76,16 @@ def colorize(grid):
     return grid_color
 
 
-
 def main():
     """ Main body """
     # Initialization
     prob = 0.5
-    grid = gen_rand_sys(200, prob)
+    grid = gen_rand_sys(100, prob)
     c_grid = colorize(grid)
     plt.pcolor(c_grid[:, 1:], edgecolor='white')
     plt.colorbar()
-    plt.show()
+    plt.savefig("colored.jpg", dpi=500, bbox_inches='tight')
     print(c_grid)
-
 
 
 if __name__ == "__main__":
