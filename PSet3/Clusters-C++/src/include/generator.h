@@ -2,9 +2,11 @@
 #include <iostream>
 #include <stdlib.h>
 
+// The matrix type we will use
 typedef std::vector< std::vector<int*> > ptrMatrix;
 typedef std::vector<int*> ptrRow;
 
+// This one is just to initialize the ptrMatrix
 typedef std::vector< std::vector<int> > Matrix;
 typedef std::vector<int> Row;
 
@@ -13,7 +15,7 @@ static bool gen_rand(double prob)
     const double max = 4096.0;
 
     // using rand
-    double my_rand = ((int)rand() % 4096) / max;
+    double my_rand = (rand() % 4096) / max;
 
     if (my_rand < prob)
     {
@@ -26,11 +28,9 @@ static bool gen_rand(double prob)
 }
 
 
-static ptrMatrix generate_grid(int size)
+static ptrMatrix generate_grid(int size, double prob)
 {
-    /* const std::size_t L = 100;               // Size of the matrix */
     Matrix matrix;                          // the grid to be generated
-    double prob = 0.59;                      // The probability of a cell to be on (1)
 
     for(int i = 0; i < size; i++)
     {
@@ -62,13 +62,13 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
 {
     const bool is_on = (*matrix[i][j] != 0);
 
-    // if at the top, no need to look up
-    if (i == 0 && is_on)
+    // if at the left, no need to look left
+    if (j == 0 && is_on)
     {
-        if (matrix[i][j - 1] != 0)
+        if (matrix[i - 1][j] != 0)
         {
             // Same cluster so same color
-            matrix[i][j] = matrix[i][j - 1];
+            matrix[i][j] = matrix[i - 1][j];
         }
         else
         {
@@ -102,7 +102,7 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
                 matrix[i][j] = std::max(i_left, i_up);
             }
         }
-        else
+        else        //If No prev clusters around...
         {
             // New cluster
             front.push_back(front[-1] + 1);
@@ -114,19 +114,20 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
 
 static ptrMatrix colorize(ptrMatrix matrix)
 {
-    const size_t L = matrix.size();
+    const size_t L = matrix.size();     // Matrix size
+    // Make the color codes
     std::vector<int> frontier;
     frontier.reserve(L);
     // Make the cluster initializer row
     ptrRow init;
 
-    for (size_t i = 1; i <= L; i++)
+    for (size_t i = 0; i <= L; i++)
     {
         init.push_back(&frontier[i]);
     }
     matrix.insert(matrix.begin(), init);
 
-    for (size_t i = 0; i < L; i++)             // Loop over the rows
+    for (size_t i = 1; i < L; i++)             // Loop over the rows
     {
         for (size_t j = 0; j < L; j++)         // Loop over items in the row
         {

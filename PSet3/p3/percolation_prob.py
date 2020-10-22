@@ -19,7 +19,6 @@ def main():
     for i in range(21):
         perc = 0            # The number of percolations in 100 tries
         for _ in range(100):
-            print(prob)
             grid = grs(size, prob)
             c_grid = colorize(grid)
             if is_percolated(c_grid):
@@ -28,7 +27,6 @@ def main():
         data[i] = perc
 
     print(data)
-    print(range(1, c_grid.shape[1] + 1))
 
 
 if __name__ == "__main__":

@@ -79,7 +79,7 @@ def colorize(grid):
 def is_percolated(grid):
     """Iterate over the last column and check if percolation accures"""
     for i in range(grid.shape[0]):
-        if grid[i][-1] in range(1, grid.shape[0] + 1):
+        if grid[i][-1] > 0 and grid[i][-1] < grid.shape[0] + 1:
             return 1
     return 0
 
