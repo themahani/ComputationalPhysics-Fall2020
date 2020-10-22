@@ -37,10 +37,9 @@ def main():
     size = [10, 100, 200]
     # size = [10]
     for i in range(len(size)):
+        # Iterate for this size
         # LOG
         print("==> Iterating for size", size[i])
-
-        # Iterate for this size
         my_data = iter_prob(size[i])
 
         # Make dataframe and save to csv
