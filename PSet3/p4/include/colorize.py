@@ -19,6 +19,8 @@ def merge(grid, new, old):
                 grid[i, j] = new
 
 
+
+
 def find_cluster(grid, i, j):
     """ Find the cluster the item belongs to """
     is_on = grid[i, j] != 0

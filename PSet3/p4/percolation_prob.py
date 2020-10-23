@@ -10,15 +10,15 @@ from matplotlib import pyplot as plt
 import pandas as pd
 
 from include.generation import gen_rand_sys as grs
-from colorize import colorize, is_percolated
+from include.colorize import colorize, is_percolated
 
 
 def iter_prob(size):
     """ Iterate over the probability and return the Percolation Probability """
-    data = np.zeros(shape=(19, ), dtype=int)
+    data = np.zeros(shape=(20, ), dtype=int)
     prob = 0            # probability of a cell being "on"
 
-    for i in range(19):
+    for i in range(20):
         prob += 0.05
         perc = 0            # The number of percolations in 100 tries
         print("==> Percolating 100 times for Probability", prob)
@@ -36,8 +36,8 @@ def iter_prob(size):
 
 def main():
     """Main body"""
-    size = [200]
-    # size = [10, 100]
+    # size = [10, 100, 200]
+    size = [10, 100]
     for i in range(len(size)):
         # Iterate for this size
         # LOG
