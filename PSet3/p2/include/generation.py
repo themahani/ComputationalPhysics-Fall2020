@@ -11,7 +11,7 @@ from sys import argv
 def gen_binary_rand(prob):
     """return 1 with probability p, return 0 otherwise"""
     rand = np.random.uniform()
-    if rand > prob:
+    if rand < prob:
         return 1
     else:
         return 0

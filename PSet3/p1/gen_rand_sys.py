@@ -12,7 +12,7 @@ def gen_binary_rand():
     """return 1 with probability p, return 0 otherwise"""
     probability = 0.6
     rand = np.random.uniform()
-    if rand > probability:
+    if rand < probability:
         return 1
     else:
         return 0
