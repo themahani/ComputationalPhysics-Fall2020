@@ -33,19 +33,19 @@ static bool gen_rand(double prob)
 
 static ptrMatrix generate_grid(int size, double prob)
 {
-    Matrix matrix;                          // the grid to be generated
+    /* Matrix matrix;                          // the grid to be generated */
 
-    for(int i = 0; i < size; i++)
-    {
-        Row row(size);
+    /* for(int i = 0; i < size; i++) */
+    /* { */
+    /*     Row row(size); */
 
-        for(int j = 0; j < size; j++)
-        {
-            row[j] = gen_rand(prob);
-        }
+    /*     for(int j = 0; j < size; j++) */
+    /*     { */
+    /*         row[j] = gen_rand(prob); */
+    /*     } */
 
-        matrix.push_back(row);
-    }
+    /*     matrix.push_back(row); */
+    /* } */
 
     ptrMatrix ptr_matrix;
 
@@ -54,7 +54,9 @@ static ptrMatrix generate_grid(int size, double prob)
         ptrRow ptr_row(size);
         for (int j = 0; j < size; j++)
         {
-            ptr_row[j] = std::make_shared<int>(matrix[i][j]);
+            ptr_row[j] = std::make_shared<int>();
+            *ptr_row[j] = gen_rand(prob);
+            /* ptr_row[j] = matrix[i][j] */
         }
         ptr_matrix.push_back(ptr_row);
     }
@@ -88,8 +90,8 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
         // If cluster around...
         if (up_on || left_on)
         {
-            std::shared_ptr<int> i_left = std::make_shared<int>(matrix[i][j - 1]);
-            std::shared_ptr<int> i_up = std::make_shared<int>(matrix[i - 1][j]);
+            std::shared_ptr<int> i_left = std::make_shared<int>(*matrix[i][j - 1]);
+            std::shared_ptr<int> i_up = std::make_shared<int>(*matrix[i - 1][j]);
             /* int* i_up = matrix[i - 1][j]; */
 
             if (up_on && left_on)

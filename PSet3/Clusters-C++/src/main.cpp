@@ -8,10 +8,11 @@
 int main()
 {
     const int size = 15;
-    const double prob = 0.59;               // The probability of a cell to be on (1)
+    const double prob = 0.45;               // The probability of a cell to be on (1)
     srand(time(NULL));
     ptrMatrix grid = generate_grid(size, prob);
-    /* colorize(grid); */
+
+    ptrMatrix c_grid = colorize(grid);
 
     // Print grid
     for (int i = 0; i < size; i++)
