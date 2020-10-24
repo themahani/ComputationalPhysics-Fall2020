@@ -90,29 +90,32 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
         // If cluster around...
         if (up_on || left_on)
         {
-            std::shared_ptr<int> i_left = std::make_shared<int>(*matrix[i][j - 1]);
-            std::shared_ptr<int> i_up = std::make_shared<int>(*matrix[i - 1][j]);
+            /* std::shared_ptr<int> i_left = std::make_shared<int>(*matrix[i][j - 1]); */
+            /* std::shared_ptr<int> i_up = std::make_shared<int>(*matrix[i - 1][j]); */
+            std::shared_ptr<int> i_left = matrix[i][j - 1];
+            std::shared_ptr<int> i_up = matrix[i - 1][j];
+
             /* int* i_up = matrix[i - 1][j]; */
 
             if (up_on && left_on)
             {
                 // The min is the cluster to get
-                matrix[i][j] = std::min(i_left, i_up);
+                matrix[i][j] = std::make_shared<int>(std::min(*i_left, *i_up));
                 // marge the two clusters
-                *i_left = *std::min(i_left, i_up);
-                *i_up = *std::min(i_left, i_up);
+                *i_left = std::min(*i_left, *i_up);
+                *i_up = std::min(*i_left, *i_up);
             }
             else
             {
                 // one of them is zero
-                matrix[i][j] = std::max(i_left, i_up);
+                matrix[i][j] = std::make_shared<int>(std::max(*i_left, *i_up));
             }
         }
         else        //If No prev clusters around...
         {
             // New cluster
-            front.push_back(front[-1] + 1);
-            matrix[i][j] = std::make_shared<int>(front[-1]);
+            front.push_back(*front.end() + 1);
+            matrix[i][j] = std::make_shared<int>(*front.end());
         }
     }
 }
@@ -124,16 +127,20 @@ static ptrMatrix colorize(ptrMatrix matrix)
     // Make the color codes
     std::vector<int> frontier;
     frontier.reserve(L);
+    for (size_t i = 0; i < L; i++)
+    {
+        frontier.push_back(i + 1);
+    }
     // Make the cluster initializer row
     ptrRow init;
 
-    for (size_t i = 0; i <= L; i++)
+    for (size_t i = 0; i < L; i++)
     {
         init.push_back(std::make_shared<int>(frontier[i]));
     }
     matrix.insert(matrix.begin(), init);
 
-    for (size_t i = 1; i < L; i++)             // Loop over the rows
+    for (size_t i = 1; i < L; i++)             // Loop over the rows, ignore init in index 0
     {
         for (size_t j = 0; j < L; j++)         // Loop over items in the row
         {
@@ -142,4 +149,15 @@ static ptrMatrix colorize(ptrMatrix matrix)
     }
 
     return matrix;
+}
+
+static bool is_percolated(const ptrMatrix& matrix)
+{
+    const size_t L = matrix[0].size();
+
+    for (size_t i = 0; i < L; i++)
+        if (*matrix[-1][i] > 0 && *matrix[-1][i] < L)
+            return 1;
+
+    return 0;
 }
