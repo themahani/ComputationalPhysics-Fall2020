@@ -1,10 +1,13 @@
+#pragma  once
+
+#include <memory>
 #include <vector>
 #include <iostream>
 #include <stdlib.h>
 
 // The matrix type we will use
-typedef std::vector< std::vector<int*> > ptrMatrix;
-typedef std::vector<int*> ptrRow;
+typedef std::vector< std::vector< std::shared_ptr<int> > > ptrMatrix;
+typedef std::vector< std::shared_ptr<int> > ptrRow;
 
 // This one is just to initialize the ptrMatrix
 typedef std::vector< std::vector<int> > Matrix;
@@ -15,7 +18,7 @@ static bool gen_rand(double prob)
     const double max = 4096.0;
 
     // using rand
-    double my_rand = (rand() % 4096) / max;
+    const double my_rand = (rand() % 4096) / max;
 
     if (my_rand < prob)
     {
@@ -51,7 +54,7 @@ static ptrMatrix generate_grid(int size, double prob)
         ptrRow ptr_row(size);
         for (int j = 0; j < size; j++)
         {
-            ptr_row[j] = &matrix[i][j];
+            ptr_row[j] = std::make_shared<int>(matrix[i][j]);
         }
         ptr_matrix.push_back(ptr_row);
     }
@@ -74,7 +77,7 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
         {
             // New cluster
             front.push_back(front[-1] + 1);
-            matrix[i][j] = &front[-1];
+            matrix[i][j] = std::make_shared<int>(front[-1]);
         }
     }
     else if (is_on)
@@ -85,8 +88,9 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
         // If cluster around...
         if (up_on || left_on)
         {
-            int* i_left = matrix[i][j - 1];
-            int* i_up = matrix[i - 1][j];
+            std::shared_ptr<int> i_left = std::make_shared<int>(matrix[i][j - 1]);
+            std::shared_ptr<int> i_up = std::make_shared<int>(matrix[i - 1][j]);
+            /* int* i_up = matrix[i - 1][j]; */
 
             if (up_on && left_on)
             {
@@ -106,7 +110,7 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
         {
             // New cluster
             front.push_back(front[-1] + 1);
-            matrix[i][j] = &front[-1];
+            matrix[i][j] = std::make_shared<int>(front[-1]);
         }
     }
 }
@@ -123,7 +127,7 @@ static ptrMatrix colorize(ptrMatrix matrix)
 
     for (size_t i = 0; i <= L; i++)
     {
-        init.push_back(&frontier[i]);
+        init.push_back(std::make_shared<int>(frontier[i]));
     }
     matrix.insert(matrix.begin(), init);
 
