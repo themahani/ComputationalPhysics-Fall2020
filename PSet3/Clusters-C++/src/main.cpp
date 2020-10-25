@@ -12,8 +12,6 @@ int main()
     srand(time(NULL));
     ptrMatrix grid = generate_grid(size, prob);
 
-    ptrMatrix c_grid = colorize(grid);
-
     // Print grid before colorize
     for (int i = 0; i < size; i++)
     {
@@ -25,6 +23,8 @@ int main()
     }
 
     std::cout << std::endl << std::endl;
+
+    ptrMatrix c_grid = colorize(grid);
 
     // Print colored grid
     for (int i = 0; i < size; i++)

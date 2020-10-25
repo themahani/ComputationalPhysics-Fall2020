@@ -18,16 +18,7 @@ static bool gen_rand(double prob)
     const double max = 4096.0;
 
     // using rand
-    const double my_rand = (rand() % 4096) / max;
-
-    if (my_rand < prob)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
+    return ((rand() % 4096) / max < prob);
 }
 
 
@@ -78,8 +69,8 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
         else
         {
             // New cluster
-            front.push_back(front[-1] + 1);
-            matrix[i][j] = std::make_shared<int>(front[-1]);
+            front.push_back(*front.end() + 1);
+            matrix[i][j] = std::make_shared<int>(front[front.size() - 1]);
         }
     }
     else if (is_on)
@@ -100,7 +91,8 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
             if (up_on && left_on)
             {
                 // The min is the cluster to get
-                matrix[i][j] = std::make_shared<int>(std::min(*i_left, *i_up));
+                matrix[i][j] = (*i_left < *i_up ? i_left : i_up); 
+
                 // marge the two clusters
                 *i_left = std::min(*i_left, *i_up);
                 *i_up = std::min(*i_left, *i_up);
@@ -108,14 +100,14 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
             else
             {
                 // one of them is zero
-                matrix[i][j] = std::make_shared<int>(std::max(*i_left, *i_up));
+                matrix[i][j] = (*i_left != 0 ? i_left : i_up);
             }
         }
         else        //If No prev clusters around...
         {
             // New cluster
             front.push_back(*front.end() + 1);
-            matrix[i][j] = std::make_shared<int>(*front.end());
+            matrix[i][j] = std::make_shared<int>(front[front.size() - 1]);
         }
     }
 }
