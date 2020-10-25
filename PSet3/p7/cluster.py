@@ -62,7 +62,7 @@ def cluster(index, prob, grid, i, j, area, gyro_rad):
 def repeat_stuff():
     """ Repeat the process for probs """
     # probability
-    probs = [0.5, 0.55, 0.588]
+    probs = [0.5, 0.55, 0.587]
     size = 10000
     num = 150
 
@@ -71,8 +71,8 @@ def repeat_stuff():
     gyros = []
 
     for prob in probs:
-        area = np.zeros(shape=(1, num), dtype=int)
-        gyro_rad = np.zeros(shape=(1, num), dtype=int)
+        area = np.zeros(shape=(1, num), dtype=float)
+        gyro_rad = np.zeros(shape=(1, num), dtype=float)
 
         print("Looping for", prob)
         # Repeat num times
@@ -83,6 +83,8 @@ def repeat_stuff():
             # print(index)
             cluster(index, prob, grid, size // 2 - 1, size // 2 - 1,
                     area, gyro_rad)
+            if area[0, index] != 0:
+                gyro_rad[0, index] /= area[0, index]
 
         print(np.mean(area), np.mean(np.sqrt(gyro_rad)))
 
@@ -94,7 +96,7 @@ def repeat_stuff():
 
 def main():
     """ Main Body """
-    probs = np.array([0.5, 0.55, 0.588])
+    probs = np.array([0.5, 0.55, 0.587])
     l_area, l_gyro = repeat_stuff()
 
     # Fit data for the second plot
@@ -111,7 +113,7 @@ def main():
     ax2.plot(np.log10(l_gyro), np.log10(l_area), ls='--',
              marker='^', label='data')
 
-    ax2.set_xlabel("log10(p), p = probability")
+    ax2.set_xlabel("log10(ksi), ksi = probability")
     ax2.set_ylabel("log10(s), s = area")
     print("==> Saving to jpg")
     plt.savefig("area-gyro.jpg", bbox_inches='tight', dpi=500)
