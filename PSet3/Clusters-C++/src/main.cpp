@@ -1,7 +1,9 @@
 #include <iostream>
-#include "include/generator.h"
 #include <cstdlib>
 #include <ctime>
+
+#include "include/generator.h"
+#include "include/matplotlibcpp.h"
 
 #define LOG(x) std::cout << x << std::endl;
 
