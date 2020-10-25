@@ -113,7 +113,7 @@ def main():
     ax2.plot(np.log10(l_gyro), np.log10(l_area), ls='--',
              marker='^', label='data')
 
-    ax2.set_xlabel("log10(ksi), ksi = probability")
+    ax2.set_xlabel("log10(ksi), ksi = gyro rad")
     ax2.set_ylabel("log10(s), s = area")
     print("==> Saving to jpg")
     plt.savefig("area-gyro.jpg", bbox_inches='tight', dpi=500)
