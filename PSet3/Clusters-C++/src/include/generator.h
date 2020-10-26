@@ -61,7 +61,7 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
     // if at the left, no need to look left
     if (j == 0 && is_on)
     {
-        if (matrix[i - 1][j] != 0)
+        if (*matrix[i - 1][j] != 0)
         {
             // Same cluster so same color
             matrix[i][j] = matrix[i - 1][j];
