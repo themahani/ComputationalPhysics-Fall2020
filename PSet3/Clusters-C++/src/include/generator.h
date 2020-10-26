@@ -132,7 +132,7 @@ static ptrMatrix colorize(ptrMatrix matrix)
     }
     matrix.insert(matrix.begin(), init);
 
-    for (size_t i = 1; i < L; i++)             // Loop over the rows, ignore init in index 0
+    for (size_t i = 1; i < L+1; i++)             // Loop over the rows, ignore init in index 0
     {
         for (size_t j = 0; j < L; j++)         // Loop over items in the row
         {
