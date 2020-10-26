@@ -3,14 +3,13 @@
 #include <ctime>
 
 #include "include/generator.h"
-#include "include/matplotlibcpp.h"
 
 #define LOG(x) std::cout << x << std::endl;
 
 int main()
 {
     const int size = 15;
-    const double prob = 0.60;               // The probability of a cell to be on (1)
+    const double prob = 0.45;               // The probability of a cell to be on (1)
     srand(time(NULL));
     ptrMatrix grid = generate_grid(size, prob);
 
@@ -37,6 +36,8 @@ int main()
         }
         std::cout << std::endl;
     }
+
+    LOG(is_percolated(c_grid))
 
 
     /* for (int i = 0; i < 50; i++) */

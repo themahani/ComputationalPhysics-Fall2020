@@ -69,7 +69,7 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
         else
         {
             // New cluster
-            front.push_back(*front.end() + 1);
+            front.push_back(front[front.size() - 1] + 1);
             matrix[i][j] = std::make_shared<int>(front[front.size() - 1]);
         }
     }
@@ -91,7 +91,7 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
             if (up_on && left_on)
             {
                 // The min is the cluster to get
-                matrix[i][j] = (*i_left < *i_up ? i_left : i_up); 
+                matrix[i][j] = (*i_left < *i_up ? i_left : i_up);
 
                 // marge the two clusters
                 *i_left = std::min(*i_left, *i_up);
@@ -106,7 +106,7 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
         else        //If No prev clusters around...
         {
             // New cluster
-            front.push_back(*front.end() + 1);
+            front.push_back(front[front.size() - 1] + 1);
             matrix[i][j] = std::make_shared<int>(front[front.size() - 1]);
         }
     }
@@ -148,7 +148,7 @@ static bool is_percolated(const ptrMatrix& matrix)
     const size_t L = matrix[0].size();
 
     for (size_t i = 0; i < L; i++)
-        if (*matrix[-1][i] > 0 && *matrix[-1][i] < L)
+        if (*matrix[matrix.size() - 1][i] > 0 && *matrix[matrix.size() - 1][i] < L)
             return 1;
 
     return 0;

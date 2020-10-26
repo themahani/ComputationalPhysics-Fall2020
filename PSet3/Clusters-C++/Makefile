@@ -4,7 +4,7 @@
 
 # Compiler settings - Can be customized.
 CC = g++
-CXXFLAGS = -g -save-temps=obj -std=c++14 -Wall
+CXXFLAGS = -g -save-temps=obj -std=c++14 -Wall -I/usr/include/python2.7 -lpython2.7
 LDFLAGS =
 
 # Makefile settings - Can be customized.
