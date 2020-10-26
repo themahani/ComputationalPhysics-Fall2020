@@ -7,7 +7,7 @@ Percolation
 
 import numpy as np
 from matplotlib import pyplot as plt
-from include.generation import gen_rand_sys
+from generation import gen_rand_sys
 
 
 def merge(grid, new, old):
@@ -29,8 +29,8 @@ def find_cluster(grid, i, j):
             # Same cluster so same color
             grid[i, j] = grid[i, j - 1]
         else:
-            front[0] += 1
-            grid[i, j] = front[0]
+            front.append(front[-1])
+            grid[i, j] = front[-1]
     elif is_on:
         cond_a = grid[i, j - 1] != 0
         cond_b = grid[i - 1, j] != 0
@@ -42,13 +42,16 @@ def find_cluster(grid, i, j):
             if cond_a and cond_b:
                 grid[i, j] = min(a, b)
                 # merge the min and max clusters
-                merge(grid, min(a, b), max(a, b))
+                # merge(grid, min(a, b), max(a, b))
+                front[max(a, b)] = front[front[max(a, b)]]
             else:
                 # one of them is zero. So color is the other num
                 grid[i, j] = max(a, b)
         else:
-            front[0] += 1
-            grid[i, j] = front[0]
+            front.append(front[-1] + 1)
+            grid[i, j] = front[-1]
+
+
 
 
 def clusterize(grid):
@@ -56,8 +59,7 @@ def clusterize(grid):
     Find clusters
     """
     length = grid.shape[0]
-    global front
-    front = [length + 1]
+
     # loop over the cluster
     for i in range(length):
         for j in range(1, length + 1):
@@ -68,10 +70,17 @@ def colorize(grid):
     """ Colorize the grid """
     # Initialization
     length = grid.shape[0]
-    init = np.ones(shape=(length, 1), dtype=int)
-    for i in range(length):
-        init[i, 0] = i + 1
-    grid_color = np.hstack((init, grid))
+    # init = np.ones(shape=(length, 1), dtype=int)
+    # for i in range(length):
+    #     init[i, 0] = i + 1
+    global front
+    front = [[]]
+    for i in range(1, length + 1):
+        front[0].append(i)
+    init = np.array(front)
+    print(init)
+    print(grid)
+    grid_color = np.hstack((init.T, grid))
     clusterize(grid_color)
     return grid_color
 
@@ -88,11 +97,12 @@ def main():
     """ Main body """
     # Initialization
     prob = 0.5
-    grid = gen_rand_sys(100, prob)
+    grid = gen_rand_sys(15, prob)
     c_grid = colorize(grid)
     plt.pcolor(c_grid[:, 1:], edgecolor='white')
     plt.colorbar()
-    plt.savefig("colored.jpg", dpi=500, bbox_inches='tight')
+    # plt.savefig("colored.jpg", dpi=500, bbox_inches='tight')
+    plt.show()
     print(c_grid)
 
 
