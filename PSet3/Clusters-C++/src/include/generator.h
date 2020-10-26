@@ -9,9 +9,6 @@
 typedef std::vector< std::vector< std::shared_ptr<int> > > ptrMatrix;
 typedef std::vector< std::shared_ptr<int> > ptrRow;
 
-// This one is just to initialize the ptrMatrix
-typedef std::vector< std::vector<int> > Matrix;
-typedef std::vector<int> Row;
 
 static bool gen_rand(double prob)
 {
@@ -53,6 +50,7 @@ static ptrMatrix generate_grid(int size, double prob)
     }
     return ptr_matrix;
 }
+
 
 static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int> &front)
 {
@@ -139,9 +137,11 @@ static ptrMatrix colorize(ptrMatrix &matrix)
             find_cluster(matrix, i, j, frontier);
         }
     }
+    matrix.erase(matrix.begin());
 
     return matrix;
 }
+
 
 static bool is_percolated(const ptrMatrix& matrix)
 {
@@ -152,4 +152,21 @@ static bool is_percolated(const ptrMatrix& matrix)
             return 1;
 
     return 0;
+}
+
+
+static size_t percolate(const size_t times, const size_t size, const double prob)
+{
+    // Initialize counter
+    size_t counter = 0;
+    // Loop for <times> times and record the frequency of percolation
+    for (size_t i=0; i< times; i++)
+    {
+        ptrMatrix grid = generate_grid(size, prob);
+        colorize(grid);
+        if (is_percolated(grid))
+            counter++;
+    }
+
+    return counter;
 }
