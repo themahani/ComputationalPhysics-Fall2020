@@ -25,19 +25,20 @@ int main()
 
     std::cout << std::endl << std::endl;
 
-    ptrMatrix c_grid = colorize(grid);
+    /* ptrMatrix c_grid = colorize(grid); */
+    colorize(grid);
 
     // Print colored grid
     for (int i = 1; i < size + 1; i++)
     {
         for (int j = 0; j < size; j++)
         {
-            std::cout << *c_grid[i][j] << ",\t";
+            std::cout << *grid[i][j] << ",\t";
         }
         std::cout << std::endl;
     }
 
-    LOG(is_percolated(c_grid))
+    LOG(is_percolated(grid))
 
 
     /* for (int i = 0; i < 50; i++) */

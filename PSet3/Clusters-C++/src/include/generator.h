@@ -113,7 +113,7 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
 }
 
 
-static ptrMatrix colorize(ptrMatrix matrix)
+static ptrMatrix colorize(ptrMatrix &matrix)
 {
     const size_t L = matrix.size();     // Matrix size
     // Make the color codes
