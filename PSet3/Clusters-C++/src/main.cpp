@@ -4,15 +4,16 @@
 #include <ctime>
 
 #include "include/generator.h"
+#include "include/timer.h"
 
 #define LOG(x) std::cout << x << std::endl;
 
 
 int main()
 {
-    LOG(percolate(100, 200, 0.6))
+    /* LOG(percolate(100, 200, 0.6)) */
     /* const int size = 15; */
-    /* const double prob = 0.45;               // The probability of a cell to be on (1) */
+    /* const double prob = 0.55;               // The probability of a cell to be on (1) */
     /* srand(time(NULL)); */
     /* ptrMatrix grid = generate_grid(size, prob); */
 
@@ -43,6 +44,29 @@ int main()
 
     /* LOG(is_percolated(grid)) */
 
+    LOG("Percolating includes repeating the process 500 times")
+
+    Timer t;
+
+    LOG("Percolating for 10")
+    for (double prob=0; prob < 1.0; prob += 0.05)
+    {
+        LOG(percolate(500, 10, prob))
+    }
+
+    LOG("Percolating for 100")
+    for (double prob=0; prob < 1.0; prob += 0.05)
+    {
+        LOG(percolate(500, 100, prob))
+    }
+
+    LOG("Percolating for 200")
+    for (double prob=0; prob < 1.0; prob += 0.05)
+    {
+        LOG(percolate(500, 200, prob))
+    }
+
+    std::cout << "Time elapsed: " << t.elapsed() << " seconds" << std::endl;
 
 
 

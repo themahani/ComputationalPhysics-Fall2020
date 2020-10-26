@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <stdlib.h>
+#include <ctime>
 
 // The matrix type we will use
 typedef std::vector< std::vector< std::shared_ptr<int> > > ptrMatrix;
@@ -21,19 +22,6 @@ static bool gen_rand(double prob)
 
 static ptrMatrix generate_grid(int size, double prob)
 {
-    /* Matrix matrix;                          // the grid to be generated */
-
-    /* for(int i = 0; i < size; i++) */
-    /* { */
-    /*     Row row(size); */
-
-    /*     for(int j = 0; j < size; j++) */
-    /*     { */
-    /*         row[j] = gen_rand(prob); */
-    /*     } */
-
-    /*     matrix.push_back(row); */
-    /* } */
 
     ptrMatrix ptr_matrix;
 
