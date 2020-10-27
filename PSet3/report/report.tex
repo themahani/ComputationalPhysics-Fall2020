@@ -28,10 +28,19 @@
 	\end{figure}
 	
 	\section{Probability of Percolation (Question 3)}
-	I used the coloring algorithm to find clusters and then a method called \texttt{is\_percolated(grid)} that takes the grid and loops over the last
-	column to see if any of the items have a number in the range of the length of our grid. This is the definition of percolation due to the details of
-	our clustering and coloring code specified in the previous section.
-	I plotted all the data in on plot available in Fig\ref{}.
+	I used the coloring algorithm with pointers to find clusters and then a method called \texttt{is\_percolated(grid)} that takes the grid and loops over the last
+	row to see if any of the items have a number in the range of the length of our grid. This is the definition of percolation due to the details of
+	our clustering and coloring code specified in the previous section. The runtime complexity is of order $\mathcal{O}(L^2)$ with $L$ being the 
+	size of a row.
+	I plotted all the data in on plot available in Fig\ref{fig:Perc}
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{../p3/percs.jpg}
+		\label{fig:Perc}
+		\caption{Plot for $Q$ vs. $p$ for matrix side lengths $L = 10, 100, 200$.}
+	\end{figure}
+	
+	\section{Probability of being attached to the infinite cluster $Q_\infty$}
 	
 	\section{The Mass Dimention of the Percolation Clusters (Problem 7)}
 	I did the simulation 150 times for each probability. I got \texttt{segmentation fault} error for 0.59 so I reduced it to 0.588 and it worked.
