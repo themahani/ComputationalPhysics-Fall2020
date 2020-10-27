@@ -29,7 +29,7 @@ int main()
     for (double prob=0; prob < 1.0; prob += 0.05)
     {
         /* LOG(perc_matrix.percolate(500, prob)) */
-        perc_matrix10.percolate(100, prob);
+        perc_matrix100.percolate(100, prob);
     }
 
     PercMatrix perc_matrix200(200, 0);
@@ -37,7 +37,7 @@ int main()
     for (double prob=0; prob < 1.0; prob += 0.05)
     {
         /* LOG(perc_matrix.percolate(500, prob)) */
-        perc_matrix10.percolate(100, prob);
+        perc_matrix200.percolate(100, prob);
     }
 
     /* PercMatrix matrix(15, 0.5); */
