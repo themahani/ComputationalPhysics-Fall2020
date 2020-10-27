@@ -41,7 +41,16 @@
 	\end{figure}
 	
 	\section{Probability of being attached to the infinite cluster $Q_\infty$}
+	I changed the \texttt{is\_percolated()} function to store the color code of the percolating cluster. Then I 
+	loop over the the matrix again and find $Q_\infty$. I loop for 100 runs for each $p$ and take the mean.\\
+	The plot is available in Fig\ref{fig:percProb}
 	
+	I think my random selection has a problem. The rest seems fine in my code. :|
+	\begin{figure}[h!]
+		\includegraphics[width=0.9\linewidth]{../p4/percProb.jpg}
+		\label{fig:percProb}
+		\caption{\emph{Percolation Probability $Q_\infty$} vs \emph{$p$} for p from 0 to 0.95}
+	\end{figure}
 	\section{The Mass Dimention of the Percolation Clusters (Problem 7)}
 	I did the simulation 150 times for each probability. I got \texttt{segmentation fault} error for 0.59 so I reduced it to 0.588 and it worked.
 	I drew the plots available in Fig\ref{fig:area-gyro}.

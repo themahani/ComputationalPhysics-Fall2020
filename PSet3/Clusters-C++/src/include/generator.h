@@ -1,5 +1,6 @@
 #pragma  once
 
+#include <cstddef>
 #include <memory>
 #include <vector>
 #include <iostream>
@@ -23,14 +24,17 @@ class PercMatrix
 {
     public:
         ptrMatrix ptr_matrix;
-        size_t percSize;
+        double percSize;
+        int percColor;
         double prob;
+
 
 
     public:
     PercMatrix(int size, double prob)
-        : percSize(0), prob(prob)
+        : percSize(0), percColor(0), prob(prob)
     {
+        srand(time(0));
         for (int i = 0; i < size; i++)
         {
             ptrRow ptr_row(size);
@@ -45,9 +49,25 @@ class PercMatrix
     }
 
 
+    void printMatrix() const
+    {
+        const size_t L = ptr_matrix.size();
+
+        for (size_t i=0; i < L; i++)
+        {
+            for (size_t j=0; j < L; j++)
+            {
+                std::cout << *ptr_matrix[i][j] << ",\t";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+
     void reset_matrix(double probab)
     {
         prob = probab;
+        percSize = 0;
         for (int i=0; i< ptr_matrix.size(); i++)
         {
             for (int j=0; j< ptr_matrix.size(); j++)
@@ -150,30 +170,46 @@ class PercMatrix
 
     bool is_percolated()
     {
-        const size_t L = ptr_matrix[0].size();
+        const size_t L = ptr_matrix.size();
 
         for (size_t i = 0; i < L; i++)
             if (*ptr_matrix[ptr_matrix.size() - 1][i] > 0 && *ptr_matrix[ptr_matrix.size() - 1][i] < L)
+            {
+                percColor = *ptr_matrix[ptr_matrix.size() - 1][i];
                 return 1;
-
+            }
         return 0;
     }
 
 
-    size_t percolate(const size_t times, const double prob)
+    void percolate(const size_t times, const double prob)
     {
         // Initialize counter
+        double sum = 0.0;
         size_t counter = 0;
+        double perc_prob = 0.0;
         // Loop for <times> times and record the frequency of percolation
         for (size_t i=0; i< times; i++)
         {
-            reset_matrix(prob);
-            colorize();
+            reset_matrix(prob);         // Recreate the random 1/0 state
+            colorize();                 // Colorize
             if (is_percolated())
+            {
                 counter++;
+                // Loop to get the percSize
+                for (size_t i=0; i < ptr_matrix.size(); i++)
+                {
+                    for (size_t j=0; j < ptr_matrix.size(); j++)
+                    {
+                        if (*ptr_matrix[i][j] == percColor)
+                            percSize++;
+                    }
+                }
+                sum += percSize / (ptr_matrix.size() * ptr_matrix.size());
+            }
         }
-
-        return counter;
+        std::cout << "It percolates " << counter << " times." << std::endl;
+        std::cout << "The mean perc prob for cell prob " << prob << " is: " << sum / times << std::endl;
     }
 
 };
