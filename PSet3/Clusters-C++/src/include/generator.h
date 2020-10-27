@@ -19,6 +19,164 @@ static bool gen_rand(double prob)
     return ((rand() % 4096) / max < prob);
 }
 
+class PercMatrix
+{
+    public:
+        ptrMatrix ptr_matrix;
+        size_t percSize;
+        double prob;
+
+
+    public:
+    PercMatrix(int size, double prob)
+        : percSize(0), prob(prob)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            ptrRow ptr_row(size);
+            for (int j = 0; j < size; j++)
+            {
+                ptr_row[j] = std::make_shared<int>();
+                *ptr_row[j] = gen_rand(prob);
+                /* ptr_row[j] = matrix[i][j] */
+            }
+            ptr_matrix.push_back(ptr_row);
+        }
+    }
+
+
+    void reset_matrix(double probab)
+    {
+        prob = probab;
+        for (int i=0; i< ptr_matrix.size(); i++)
+        {
+            for (int j=0; j< ptr_matrix.size(); j++)
+            {
+                ptr_matrix[i][j] = std::make_shared<int>(gen_rand(prob));
+            }
+        }
+    }
+
+
+    void find_cluster(size_t i, size_t j, std::vector<int> &front)
+    {
+        const bool is_on = (*ptr_matrix[i][j] != 0);
+
+        // if at the left, no need to look left
+        if (j == 0 && is_on)
+        {
+            if (*ptr_matrix[i - 1][j] != 0)
+            {
+                // Same cluster so same color
+                ptr_matrix[i][j] = ptr_matrix[i - 1][j];
+            }
+            else
+            {
+                // New cluster
+                front.push_back(front[front.size() - 1] + 1);
+                ptr_matrix[i][j] = std::make_shared<int>(front[front.size() - 1]);
+            }
+        }
+        else if (is_on)
+        {
+            // Now look both up and left
+            const bool left_on = (*ptr_matrix[i][j - 1] != 0);
+            const bool up_on = (*ptr_matrix[i - 1][j] != 0);
+            // If cluster around...
+            if (up_on || left_on)
+            {
+                /* std::shared_ptr<int> i_left = std::make_shared<int>(*ptr_matrix[i][j - 1]); */
+                /* std::shared_ptr<int> i_up = std::make_shared<int>(*ptr_matrix[i - 1][j]); */
+                std::shared_ptr<int> i_left = ptr_matrix[i][j - 1];
+                std::shared_ptr<int> i_up = ptr_matrix[i - 1][j];
+
+                /* int* i_up = ptr_matrix[i - 1][j]; */
+
+                if (up_on && left_on)
+                {
+                    // The min is the cluster to get
+                    ptr_matrix[i][j] = (*i_left < *i_up ? i_left : i_up);
+
+                    // marge the two clusters
+                    *i_left = std::min(*i_left, *i_up);
+                    *i_up = std::min(*i_left, *i_up);
+                }
+                else
+                {
+                    // one of them is zero
+                    ptr_matrix[i][j] = (*i_left != 0 ? i_left : i_up);
+                }
+            }
+            else        //If No prev clusters around...
+            {
+                // New cluster
+                front.push_back(front[front.size() - 1] + 1);
+                ptr_matrix[i][j] = std::make_shared<int>(front[front.size() - 1]);
+            }
+        }
+    }
+
+
+    void colorize()
+    {
+        const size_t L = ptr_matrix.size();     // ptr_matrix size
+        // Make the color codes
+        std::vector<int> frontier;
+        frontier.reserve(L);
+        for (size_t i = 0; i < L; i++)
+        {
+            frontier.push_back(i + 1);
+        }
+        // Make the cluster initializer row
+        ptrRow init;
+
+        for (size_t i = 0; i < L; i++)
+        {
+            init.push_back(std::make_shared<int>(frontier[i]));
+        }
+        ptr_matrix.insert(ptr_matrix.begin(), init);
+
+        for (size_t i = 1; i < L+1; i++)             // Loop over the rows, ignore init in index 0
+        {
+            for (size_t j = 0; j < L; j++)         // Loop over items in the row
+            {
+                find_cluster(i, j, frontier);
+            }
+        }
+        ptr_matrix.erase(ptr_matrix.begin());
+
+    }
+
+
+    bool is_percolated()
+    {
+        const size_t L = ptr_matrix[0].size();
+
+        for (size_t i = 0; i < L; i++)
+            if (*ptr_matrix[ptr_matrix.size() - 1][i] > 0 && *ptr_matrix[ptr_matrix.size() - 1][i] < L)
+                return 1;
+
+        return 0;
+    }
+
+
+    size_t percolate(const size_t times, const double prob)
+    {
+        // Initialize counter
+        size_t counter = 0;
+        // Loop for <times> times and record the frequency of percolation
+        for (size_t i=0; i< times; i++)
+        {
+            reset_matrix(prob);
+            colorize();
+            if (is_percolated())
+                counter++;
+        }
+
+        return counter;
+    }
+
+};
 
 static ptrMatrix generate_grid(int size, double prob)
 {
@@ -32,7 +190,7 @@ static ptrMatrix generate_grid(int size, double prob)
         {
             ptr_row[j] = std::make_shared<int>();
             *ptr_row[j] = gen_rand(prob);
-            /* ptr_row[j] = matrix[i][j] */
+            /* ptr_row[j] = ptr_matrix[i][j] */
         }
         ptr_matrix.push_back(ptr_row);
     }
@@ -40,44 +198,44 @@ static ptrMatrix generate_grid(int size, double prob)
 }
 
 
-static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int> &front)
+static void find_cluster(ptrMatrix &ptr_matrix, size_t i, size_t j, std::vector<int> &front)
 {
-    const bool is_on = (*matrix[i][j] != 0);
+    const bool is_on = (*ptr_matrix[i][j] != 0);
 
     // if at the left, no need to look left
     if (j == 0 && is_on)
     {
-        if (*matrix[i - 1][j] != 0)
+        if (*ptr_matrix[i - 1][j] != 0)
         {
             // Same cluster so same color
-            matrix[i][j] = matrix[i - 1][j];
+            ptr_matrix[i][j] = ptr_matrix[i - 1][j];
         }
         else
         {
             // New cluster
             front.push_back(front[front.size() - 1] + 1);
-            matrix[i][j] = std::make_shared<int>(front[front.size() - 1]);
+            ptr_matrix[i][j] = std::make_shared<int>(front[front.size() - 1]);
         }
     }
     else if (is_on)
     {
         // Now look both up and left
-        const bool left_on = (*matrix[i][j - 1] != 0);
-        const bool up_on = (*matrix[i - 1][j] != 0);
+        const bool left_on = (*ptr_matrix[i][j - 1] != 0);
+        const bool up_on = (*ptr_matrix[i - 1][j] != 0);
         // If cluster around...
         if (up_on || left_on)
         {
-            /* std::shared_ptr<int> i_left = std::make_shared<int>(*matrix[i][j - 1]); */
-            /* std::shared_ptr<int> i_up = std::make_shared<int>(*matrix[i - 1][j]); */
-            std::shared_ptr<int> i_left = matrix[i][j - 1];
-            std::shared_ptr<int> i_up = matrix[i - 1][j];
+            /* std::shared_ptr<int> i_left = std::make_shared<int>(*ptr_matrix[i][j - 1]); */
+            /* std::shared_ptr<int> i_up = std::make_shared<int>(*ptr_matrix[i - 1][j]); */
+            std::shared_ptr<int> i_left = ptr_matrix[i][j - 1];
+            std::shared_ptr<int> i_up = ptr_matrix[i - 1][j];
 
-            /* int* i_up = matrix[i - 1][j]; */
+            /* int* i_up = ptr_matrix[i - 1][j]; */
 
             if (up_on && left_on)
             {
                 // The min is the cluster to get
-                matrix[i][j] = (*i_left < *i_up ? i_left : i_up);
+                ptr_matrix[i][j] = (*i_left < *i_up ? i_left : i_up);
 
                 // marge the two clusters
                 *i_left = std::min(*i_left, *i_up);
@@ -86,22 +244,22 @@ static void find_cluster(ptrMatrix &matrix, size_t i, size_t j, std::vector<int>
             else
             {
                 // one of them is zero
-                matrix[i][j] = (*i_left != 0 ? i_left : i_up);
+                ptr_matrix[i][j] = (*i_left != 0 ? i_left : i_up);
             }
         }
         else        //If No prev clusters around...
         {
             // New cluster
             front.push_back(front[front.size() - 1] + 1);
-            matrix[i][j] = std::make_shared<int>(front[front.size() - 1]);
+            ptr_matrix[i][j] = std::make_shared<int>(front[front.size() - 1]);
         }
     }
 }
 
 
-static ptrMatrix colorize(ptrMatrix &matrix)
+static ptrMatrix colorize(ptrMatrix &ptr_matrix)
 {
-    const size_t L = matrix.size();     // Matrix size
+    const size_t L = ptr_matrix.size();     // ptr_matrix size
     // Make the color codes
     std::vector<int> frontier;
     frontier.reserve(L);
@@ -116,27 +274,27 @@ static ptrMatrix colorize(ptrMatrix &matrix)
     {
         init.push_back(std::make_shared<int>(frontier[i]));
     }
-    matrix.insert(matrix.begin(), init);
+    ptr_matrix.insert(ptr_matrix.begin(), init);
 
     for (size_t i = 1; i < L+1; i++)             // Loop over the rows, ignore init in index 0
     {
         for (size_t j = 0; j < L; j++)         // Loop over items in the row
         {
-            find_cluster(matrix, i, j, frontier);
+            find_cluster(ptr_matrix, i, j, frontier);
         }
     }
-    matrix.erase(matrix.begin());
+    ptr_matrix.erase(ptr_matrix.begin());
 
-    return matrix;
+    return ptr_matrix;
 }
 
 
-static bool is_percolated(const ptrMatrix& matrix)
+static bool is_percolated(const ptrMatrix& ptr_matrix)
 {
-    const size_t L = matrix[0].size();
+    const size_t L = ptr_matrix[0].size();
 
     for (size_t i = 0; i < L; i++)
-        if (*matrix[matrix.size() - 1][i] > 0 && *matrix[matrix.size() - 1][i] < L)
+        if (*ptr_matrix[ptr_matrix.size() - 1][i] > 0 && *ptr_matrix[ptr_matrix.size() - 1][i] < L)
             return 1;
 
     return 0;

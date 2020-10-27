@@ -48,10 +48,11 @@ int main()
 
     Timer t;
 
+    PercMatrix perc_matrix(10, 0);
     LOG("Percolating for 10")
     for (double prob=0; prob < 1.0; prob += 0.05)
     {
-        LOG(percolate(500, 10, prob))
+        LOG(perc_matrix.percolate(500, prob))
     }
 
     LOG("Percolating for 100")
