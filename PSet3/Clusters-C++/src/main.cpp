@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 
 #include "include/generator.h"
 #include "include/timer.h"
@@ -12,46 +13,89 @@
 int main()
 {
 
-    LOG("Percolating includes repeating the process 100 times")
 
     Timer t;
 
-    PercMatrix perc_matrix10(10, 0);
-    LOG("Percolating for 10")
-    for (double prob=0; prob < 1.0; prob += 0.05)
-    {
-        /* LOG(perc_matrix.percolate(500, prob)) */
-        perc_matrix10.percolate(100, prob);
-    }
+    /* =========================================================
+     * ==============   Problem 3 and 4     ====================
+     * ========================================================= */
 
-    PercMatrix perc_matrix100(100, 0);
-    LOG("Percolating for 100")
-    for (double prob=0; prob < 1.0; prob += 0.05)
-    {
-        /* LOG(perc_matrix.percolate(500, prob)) */
-        perc_matrix100.percolate(100, prob);
-    }
+    /* LOG("Percolating includes repeating the process 100 times") */
 
-    PercMatrix perc_matrix200(200, 0);
-    LOG("Percolating for 200")
-    for (double prob=0; prob < 1.0; prob += 0.05)
-    {
-        /* LOG(perc_matrix.percolate(500, prob)) */
-        perc_matrix200.percolate(100, prob);
-    }
-
-    /* PercMatrix matrix(15, 0.5); */
-    /* matrix.colorize(); */
-
-    /* while(!matrix.is_percolated()) */
+    /* PercMatrix perc_matrix10(10, 0); */
+    /* LOG("Percolating for 10") */
+    /* for (double prob=0; prob < 1.0; prob += 0.05) */
     /* { */
-    /*     matrix.reset_matrix(0.5); */
-    /*     matrix.colorize(); */
+    /*     /1* LOG(perc_matrix.percolate(500, prob)) *1/ */
+    /*     perc_matrix10.percolate(100, prob); */
     /* } */
-    /* matrix.printMatrix(); */
+
+    /* PercMatrix perc_matrix100(100, 0); */
+    /* LOG("Percolating for 100") */
+    /* for (double prob=0; prob < 1.0; prob += 0.05) */
+    /* { */
+    /*     /1* LOG(perc_matrix.percolate(500, prob)) *1/ */
+    /*     perc_matrix100.percolate(100, prob); */
+    /* } */
+
+    /* PercMatrix perc_matrix200(200, 0); */
+    /* LOG("Percolating for 200") */
+    /* for (double prob=0; prob < 1.0; prob += 0.05) */
+    /* { */
+    /*     /1* LOG(perc_matrix.percolate(500, prob)) *1/ */
+    /*     perc_matrix200.percolate(100, prob); */
+    /* } */
+
+    /* ======================================================
+     * ==================== Problem 5 =======================
+     * ====================================================== */
+
+    std::vector<size_t> sizes;
+    sizes.reserve(5);
+    for (int L = 10; L < 161; L *= 2)
+    {
+        LOG("Size is: " << L)
+        std::vector<double> meanGyros;
+        for (double prob = 0; prob < 1.0; prob += 0.025)
+        {
+            LOG(prob)
+            double meanGyro = 0;
+            for (int rep = 0; rep < 100; rep++)
+            {
+                PercMatrix matrix(L, prob);
+                matrix.colorize();
+                meanGyro += matrix.findNextGyro();
+            }
+            meanGyros.push_back(meanGyro / 100.0);
+        }
+        LOG("")
+
+        for (int i = 0; i < 40; i++)
+        {
+            std::cout << meanGyros[i] << ",\t" << std::endl;
+        }
+    }
+
 
     std::cout << "Time elapsed: " << t.elapsed() << " seconds" << std::endl;
 
+    // Test
+    /* double prob = 0; */
+    /* do */
+    /* { */
+    /*     std::cin >> prob; */
+    /*     PercMatrix matrix(15, prob); */
+    /*     matrix.printMatrix(); */
+    /*     LOG("") */
+    /*     matrix.colorize(); */
+    /*     matrix.printMatrix(); */
+    /*     LOG("") */
+    /*     matrix.is_percolated(); */
+
+    /*     LOG(matrix.percColor) */
+    /*         LOG(matrix.findNextGyro()); */
+    /* } */
+    /* while(prob != 0); */
 
 
 }

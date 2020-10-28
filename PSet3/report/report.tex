@@ -44,13 +44,51 @@
 	I changed the \texttt{is\_percolated()} function to store the color code of the percolating cluster. Then I 
 	loop over the the matrix again and find $Q_\infty$. I loop for 100 runs for each $p$ and take the mean.\\
 	The plot is available in Fig\ref{fig:percProb}
-	
-	I think my random selection has a problem. The rest seems fine in my code. :|
 	\begin{figure}[h!]
 		\includegraphics[width=0.9\linewidth]{../p4/percProb.jpg}
 		\label{fig:percProb}
 		\caption{\emph{Percolation Probability $Q_\infty$} vs \emph{$p$} for p from 0 to 0.95}
 	\end{figure}
+	
+	\section{Gyro Radius of the greatest non-infinite cluster}
+	I wrote a function \texttt{not\_percCluster(int color)} to rule out the colors for all the percolating clusters. Then, I wrote \texttt{findNextGyro()} to loop over the matrix, find the cluster coordinate, and then calculate the gyro radius for it.
+	
+	I looped for probability intervals of 0.025 and plotted the results for lengths $L = \{10, 20, 40, 80, 160\}$ in 
+	Fig\ref{fig:gyroCluster}. I also looped 100 times for each prob and length and reported the mean.
+	
+	My runtime for this problem is as follows:\\
+	\centerline{\texttt{ Time elapsed: 870.999 seconds}}
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{../p5/fig0.jpg}
+		\label{fig:gyroCluster}
+		\caption{The plot for mean gyro radius  of greatest non-percolating clusters vs. probability of cell being on. For lengths $L = \{10, 20, 40, 80, 160\}$}
+	\end{figure}
+	\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.9\linewidth]{../p5/fig1.jpg}
+	\label{fig:gyroCluste1}
+	\caption{The plot for mean gyro radius  of greatest non-percolating clusters vs. probability of cell being on. For lengths $L = \{10, 20, 40, 80, 160\}$}
+\end{figure}
+	\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\linewidth]{../p5/fig2.jpg}
+	\label{fig:gyroCluste2}
+	\caption{The plot for mean gyro radius  of greatest non-percolating clusters vs. probability of cell being on. For lengths $L = \{10, 20, 40, 80, 160\}$}
+\end{figure}
+	\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\linewidth]{../p5/fig3.jpg}
+	\label{fig:gyroCluster3}
+	\caption{The plot for mean gyro radius  of greatest non-percolating clusters vs. probability of cell being on. For lengths $L = \{10, 20, 40, 80, 160\}$}
+\end{figure}
+	\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\linewidth]{../p5/fig4.jpg}
+	\label{fig:gyroCluster4}
+	\caption{The plot for mean gyro radius  of greatest non-percolating clusters vs. probability of cell being on. For lengths $L = \{10, 20, 40, 80, 160\}$}
+\end{figure}
+
 	\section{The Mass Dimention of the Percolation Clusters (Problem 7)}
 	I did the simulation 150 times for each probability. I got \texttt{segmentation fault} error for 0.59 so I reduced it to 0.588 and it worked.
 	I drew the plots available in Fig\ref{fig:area-gyro}.

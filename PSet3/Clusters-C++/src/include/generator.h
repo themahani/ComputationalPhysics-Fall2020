@@ -1,11 +1,13 @@
 #pragma  once
 
+#include <cmath>
 #include <cstddef>
 #include <memory>
 #include <vector>
 #include <iostream>
 #include <stdlib.h>
 #include <ctime>
+#include <unordered_map>
 
 // The matrix type we will use
 typedef std::vector< std::vector< std::shared_ptr<int> > > ptrMatrix;
@@ -210,6 +212,110 @@ class PercMatrix
         }
         std::cout << "It percolates " << counter << " times." << std::endl;
         std::cout << "The mean perc prob for cell prob " << prob << " is: " << sum / times << std::endl;
+    }
+
+
+    bool not_percCluster(int color)
+    {
+        std::vector<int> percColors;
+        const size_t L = ptr_matrix.size();
+        for (size_t i = 0; i < L; i++)
+        {
+            if (*ptr_matrix[L - 1][i] > 0 && *ptr_matrix[L - 1][i] <= L)
+            {
+                percColors.push_back(*ptr_matrix[L -1][i]);
+            }
+        }
+        for (size_t i = 0; i < percColors.size(); i++)
+        {
+            if (color == percColors[i])
+                return 0;                   // It's a percolating cluster
+        }
+        return 1;                           // Not percolating cluster
+    }
+
+
+    double findNextGyro()
+    {
+        const size_t L = ptr_matrix.size();
+        // Color [key], size [value]
+        std::unordered_map<int, int> clusterSizes;
+
+        int maxSize = 0;
+        int maxColor = 0;
+        // Loop over the entire matrix.
+        for (size_t i = 0; i < L; i++)
+        {
+            for (size_t j = 0; j < L; j++)
+            {
+                // Ignore the Infinite cluster
+                if (not_percCluster(*ptr_matrix[i][j]) &&
+                        *ptr_matrix[i][j] != 0)
+                {
+                    // Update cluster sizes
+                    if (clusterSizes.find(*ptr_matrix[i][j]) != clusterSizes.end())
+                    {
+                        clusterSizes[*ptr_matrix[i][j]] += 1;
+                    }
+                    else
+                    {
+                        clusterSizes[*ptr_matrix[i][j]] = 1;
+                    }
+                    // update max cluster color code
+                    if (clusterSizes[*ptr_matrix[i][j]] > maxSize)
+                    {
+                        maxColor = *ptr_matrix[i][j];
+                        maxSize = clusterSizes[*ptr_matrix[i][j]];
+                    }
+                }
+            }
+        }
+        /* std::cout << "Max size is " << maxSize << " for color " << maxColor << std::endl; */
+        if (maxColor == 0)
+           return 0;
+
+        // get coords of maxColor cluster
+        std::vector< std::vector<int> > maxCoords;
+
+        // Loop over matrix to find coords
+        for (size_t i = 0; i < L; i++)
+        {
+            for (size_t j = 0; j < L; j++)
+            {
+                if (*ptr_matrix[i][j] == maxColor)
+                {
+                    std::vector<int> xy;
+                    xy.push_back(i);
+                    xy.push_back(j);
+                    maxCoords.push_back(xy);
+                }
+            }
+        }
+
+        // Find center for cluster
+        double mean_i = 0;
+        double mean_j = 0;
+        for (int i = 0; i < maxCoords.size(); i++)
+        {
+            mean_i += maxCoords[i][0];
+            mean_j += maxCoords[i][1];
+        }
+        mean_i /= (double)maxCoords.size();
+        mean_j /= (double)maxCoords.size();
+        /* std::cout << mean_i << ", " << mean_j << std::endl; */
+
+        // Find the gyro radius
+        double gyro = 0;
+        for (int i = 0; i < maxCoords.size(); i++)
+        {
+            // sum the distance squared
+            gyro += std::pow(maxCoords[i][0] - mean_i, 2) + std::pow(maxCoords[i][1] - mean_j, 2);
+        }
+        gyro /= (double)maxCoords.size();           // divide by size
+        gyro = std::pow(gyro, 0.5);
+
+        /* std::cout << "Gyro is: " << gyro << std::endl; */
+        return gyro;
     }
 
 };
