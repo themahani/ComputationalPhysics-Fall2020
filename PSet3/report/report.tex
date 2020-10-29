@@ -54,10 +54,10 @@
 	I wrote a function \texttt{not\_percCluster(int color)} to rule out the colors for all the percolating clusters. Then, I wrote \texttt{findNextGyro()} to loop over the matrix, find the cluster coordinate, and then calculate the gyro radius for it.
 	
 	I looped for probability intervals of 0.025 and plotted the results for lengths $L = \{10, 20, 40, 80, 160\}$ in 
-	Fig\ref{fig:gyroCluster}. I also looped 100 times for each prob and length and reported the mean.
+	Fig\ref{fig:gyroCluster}. It's worth mentioning that I looped 6000 times for 10, 2000 for 20, 1000 for 40, 500 for 800 and 100 for 160.
 	
 	My runtime for this problem is as follows:\\
-	\centerline{\texttt{ Time elapsed: 870.999 seconds}}
+	\centerline{\texttt{Time elapsed: 1420.6 seconds}}
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.9\linewidth]{../p5/fig0.jpg}
@@ -88,6 +88,19 @@
 	\label{fig:gyroCluster4}
 	\caption{The plot for mean gyro radius  of greatest non-percolating clusters vs. probability of cell being on. For lengths $L = \{10, 20, 40, 80, 160\}$}
 \end{figure}
+
+	\section{The critical power $\nu$}
+	As we did in the previous section, we now the critical probabilities in which phase shift happens. Now we know that this probability for length $L$ is related to the infinite length (unbounded) probability with the equation below:\\
+	\begin{equation}
+		|p_c(L) - p_c(\infty)| \sim L^{-\frac{1}{\nu}}
+	\end{equation}
+	where $\nu$ is the critical power. We plot $\log_{10}(y)$ vs. $\log_{10}(L)$ and fit a line to the data to get
+	the value for the slope and this way, we can find $\nu$.
+	The value for the slope is as follows:\\
+	\centerline{\texttt{Slope is -0.30502 (+/-) 0.65170}}\\
+	and so the value for $\nu$ is:\\
+	\centerline{\texttt{nu is 3.27852 (+/-) 0.65170}}\\
+	The relative error percentile is $\eta = 145.88 \%$
 
 	\section{The Mass Dimention of the Percolation Clusters (Problem 7)}
 	I did the simulation 150 times for each probability. I got \texttt{segmentation fault} error for 0.59 so I reduced it to 0.588 and it worked.

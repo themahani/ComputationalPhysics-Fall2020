@@ -9,6 +9,29 @@
 
 #define LOG(x) std::cout << x << std::endl;
 
+void gyroRep(const size_t times, const int L)
+{
+    LOG("Size is: " << L)
+        std::vector<double> meanGyros;
+    for (double prob = 0; prob < 1.0; prob += 0.025)
+    {
+        LOG(prob)
+            double meanGyro = 0;
+        for (size_t rep = 0; rep < times; rep++)
+        {
+            PercMatrix matrix(L, prob);
+            matrix.colorize();
+            meanGyro += matrix.findNextGyro();
+        }
+        meanGyros.push_back(meanGyro / (double)times);
+    }
+    LOG("")
+    for (int i = 0; i < 40; i++)
+    {
+        std::cout << meanGyros[i] << ",\t" << std::endl;
+    }
+    LOG("")
+}
 
 int main()
 {
@@ -50,31 +73,39 @@ int main()
      * ==================== Problem 5 =======================
      * ====================================================== */
 
-    std::vector<size_t> sizes;
-    sizes.reserve(5);
-    for (int L = 10; L < 161; L *= 2)
-    {
-        LOG("Size is: " << L)
-        std::vector<double> meanGyros;
-        for (double prob = 0; prob < 1.0; prob += 0.025)
-        {
-            LOG(prob)
-            double meanGyro = 0;
-            for (int rep = 0; rep < 100; rep++)
-            {
-                PercMatrix matrix(L, prob);
-                matrix.colorize();
-                meanGyro += matrix.findNextGyro();
-            }
-            meanGyros.push_back(meanGyro / 100.0);
-        }
-        LOG("")
 
-        for (int i = 0; i < 40; i++)
-        {
-            std::cout << meanGyros[i] << ",\t" << std::endl;
-        }
-    }
+    gyroRep(6000, 10);
+    gyroRep(2000, 20);
+    gyroRep(1000, 40);
+    gyroRep(500, 80);
+    gyroRep(100, 160);
+
+
+
+
+    /* for (int L = 10; L < 161; L *= 2) */
+    /* { */
+    /*     LOG("Size is: " << L) */
+    /*     std::vector<double> meanGyros; */
+    /*     for (double prob = 0; prob < 1.0; prob += 0.025) */
+    /*     { */
+    /*         LOG(prob) */
+    /*         double meanGyro = 0; */
+    /*         for (int rep = 0; rep < 100; rep++) */
+    /*         { */
+    /*             PercMatrix matrix(L, prob); */
+    /*             matrix.colorize(); */
+    /*             meanGyro += matrix.findNextGyro(); */
+    /*         } */
+    /*         meanGyros.push_back(meanGyro / 100.0); */
+    /*     } */
+    /*     LOG("") */
+
+    /*     for (int i = 0; i < 40; i++) */
+    /*     { */
+    /*         std::cout << meanGyros[i] << ",\t" << std::endl; */
+    /*     } */
+    /* } */
 
 
     std::cout << "Time elapsed: " << t.elapsed() << " seconds" << std::endl;
