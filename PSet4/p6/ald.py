@@ -1,7 +1,8 @@
-#!/usr/bin/enb python
+#!/usr/bin/env python
 
 """
 do whatever the question says
+Simulate the 2-D Aggressive Layer Decomposition
 """
 
 import numpy as np
@@ -10,12 +11,12 @@ from matplotlib import pyplot as plt
 
 class RandWalker:
     def __init__(self):
-        self.x = 100
+        self.x = np.random.randint(201)     # Random x value
         self.y = 199
 
     def reset(self):
         """reset the position, instead of recreating particle"""
-        self.x = 100
+        self.x = np.random.randint(201)     # Random x value
         self.y = 199
 
     def neighbor(self, grid):
