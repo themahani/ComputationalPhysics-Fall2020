@@ -30,7 +30,7 @@
 		\caption{The plot of $\sigma^2$ (top) and $<x>$ (bottom) over time for different probabilities. Took 10000 runs and got the mean.}
 	\end{figure} 
 
-	\section{Random Walk with Trap}
+	\section{Random Walk with Trap (Random)}
 	I simulated this problem using a class called \texttt{Drunk}. This is the actualization of a 
 	drunk person dangling around in 1-D. I set the path to be from 0 to 19 and traps at -1 and 20.
 	If the drunk gets to those points, it perishes and I can then get its lifetime.
@@ -43,6 +43,24 @@
 		\caption{mean lifetime over different indices of the path. traps at -1 and 19. Ran 10000
 		instance simulations}
 	\end{figure}
+
+	\section{Random Walk with trap (Deterministic)}
+	This time, I simulated and used the \texttt{profile} library in python to find the exact run time of my algorithm. The resulted graph is available in Fig\ref{fig:rw_trap_det}.
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{../p4/rw_trap.jpg}
+		\label{fig:rw_trap_det}
+		\caption{mean lifetime over index in path which the drunk person begins from.
+			Deterministic algorithm.}
+	\end{figure}
+	
+	I did the same for the random generation algorithm here we shall see the difference.
+	My system has an \emph{Intel Core i5 8th gen} CPU and 8 GB of DDR4 RAM. the result are:\\
+	\begin{itemize}
+		\item \textbf{Deterministic:} $0.636 s$
+		\item \textbf{Random:} $139.667 s$
+	\end{itemize}
+	This is an example where deterministic algorithms perform much faster!
 
 	\section{2-D Random Walk}
 	This time, I simulated the \texttt{Drunk} person to be a girl on a 2-D surface. Almost the same as the 1-D instance, but returns $r^2$. I ran the simulation with time intervals of 100 for 10 intervals. The plot is available in Fig\ref{fig:2d_rw}

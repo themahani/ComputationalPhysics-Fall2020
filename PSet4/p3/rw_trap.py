@@ -55,13 +55,14 @@ def main():
 
     mean_life = np.mean(lifetimes, axis=0)
 
-    plt.plot(np.linspace(0, 19, 20), mean_life, ls='', marker='o', color='y')
-    plt.xlabel('initial position')
-    plt.ylabel('mean lifetime')
-    plt.title('mean lifetime of drunk random walker over the initial position')
-    plt.savefig("drunk.jpg", bbox_inches='tight')
-    plt.show()
+    # plt.plot(np.linspace(0, 19, 20), mean_life, ls='', marker='o', color='y')
+    # plt.xlabel('initial position')
+    # plt.ylabel('mean lifetime')
+    # plt.title('mean lifetime of drunk random walker over the initial position')
+    # plt.savefig("drunk.jpg", bbox_inches='tight')
+    # plt.show()
 
 
 if __name__ == "__main__":
-    main()
+    import profile
+    profile.run("main()")
