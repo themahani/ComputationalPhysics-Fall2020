@@ -26,7 +26,7 @@ def go_til_death(index):
             tmp[i + 1] += path_prob[i] * 0.5
         # refresh path_prob
         path_prob = tmp.copy()
-        mean_lifetime += lifetime * np.sum(path_prob[1:21])
+        mean_lifetime += np.sum(path_prob[1:21])
     return mean_lifetime
 
 
@@ -39,12 +39,12 @@ def main():
         mean_lifes[i] = go_til_death(i)
 
 
-    # plt.plot(np.linspace(1, 20, 20), mean_lifes, ls='', marker='o')
-    # plt.xlabel('index in path')
-    # plt.ylabel('mean lifetime')
-    # plt.title('mean life over index in deterministic alg')
-    # plt.savefig('rw_trap.jpg', bbox_inches='tight')
-    # plt.show()
+    plt.plot(np.linspace(1, 20, 20), mean_lifes, ls='', marker='o')
+    plt.xlabel('index in path')
+    plt.ylabel('mean lifetime')
+    plt.title('mean life over index in deterministic alg')
+    plt.savefig('rw_trap.jpg', bbox_inches='tight')
+    plt.show()
 
 
 if __name__ == "__main__":
