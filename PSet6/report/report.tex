@@ -45,7 +45,10 @@
 	\section{Monte Carlo Integral(SS MC \& IS MC)}
 	I did the SS MC and IS MC as wanted. I defined their functions and used \texttt{time.time()} to find the 
 	runtime of the integration. The results are available in Table\ref{tab:MC}\\
-	It's worth noting that the numeric value is roughly $0.8820814$
+	It's worth noting that the numeric value is roughly $0.8820814$. And for IS MC, the result of the integral of $g(x)$ is:\\
+	\begin{equation}
+		\int_0^2 e^{-x} = 1 - e^{-2}
+	\end{equation}
 	\begin{table}[h!]
 		\centering
 		\begin{tabular}{|c|c|c|c|c||c|c|c|c|}
@@ -75,7 +78,23 @@
 	\section{The Sphere (Multi variable Integration SS MC)}
 	
 	\section{Metropolis Random Generation}
-	
+	 I made the function to generate random numbers with a normal distribution using the Metropolis Algorithm.\\
+	 Then, I fount the steps in which the acceptance rate is $a.r. = \{0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1\}$\\
+	 Then I made a function to find the correlation length (gyro length). There I used the fact that this length is equal to the first $j$ that gives an
+	 auto-correlation of less than $e^{-1}$.
+	 The result is in Table\ref{tab:rand}.
+	 \begin{table}[h]
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			a. r. & $0.9$ & $0.8$ & $0.7$ & $0.6$ & $0.5$ & $0.4$ & $0.3$ & $0.2$ & $0.1$ \\
+			\hline
+			$\xi$ & $28$ & $9$ & $4$ & $3$ & $2$ & $2$ & $3$ & $4$ & $8$ \\
+			\hline
+		\end{tabular}
+	\caption{The gyro length for each acceptance rate}
+	\label{tab:rand}
+	 \end{table}
 	
 	
 \end{document}
