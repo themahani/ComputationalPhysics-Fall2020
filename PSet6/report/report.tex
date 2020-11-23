@@ -4,6 +4,7 @@
 							footskip=.25in]{geometry}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{physics}
 \usepackage{hyperref}
 
 
@@ -76,6 +77,41 @@
 	\caption{Data for numerical integration using SS MC and IS MC.}	
 	\end{table}
 	\section{The Sphere (Multi variable Integration SS MC)}
+	Here the problem asks us to find the center of mass for the sphere with density
+	$\rho(z) = \rho_0(1 - \frac{z}{4R})$ where $R$ is the radius of the sphere.\\
+	This problem has a cylindrical symmetry. We take the sphere's bottom to lie on the origin
+	and the center of the sphere on $z = R$ on the z-axis. This way the solution is as follows:
+	\begin{equation}
+		\begin{aligned} \label{eq:Analytic}
+			MR_{CoM} = I &= \int_{0}^{2R} \rho(z) z \dd v = \int_{0}^{2R} \rho(z) z \pi \left(R^2 - (R - z)^2\right) 
+			\dd z \\
+			M &= \int_{0}^{2R} \dd m = \int_{0}^{2R} \rho(z) \pi \left(R^2 - (R - z)^2\right) \dd z\\
+			\Rightarrow R_{CoM} &= \frac{I}{M}
+		\end{aligned}
+	\end{equation}
+	
+	We use IS MC with the function $\rho(z)$ as our distribution $g(z)$. This way we have:
+	\begin{equation}
+		\begin{aligned}
+			I &= C \times \int_{0}^{2R} f(z) g(z) \dd z, \; C = \text{Const.},\\
+			M &= C \times \int_{0}^{2R} h(z) g(z) \dd z,\\
+			f(z) &= z \pi \left(R^2 - (R - z)^2\right),\\
+			h(z) &= \pi \left(R^2 - (R - z)^2\right)\\
+			\Rightarrow R_{CoM} &= \frac{\int_{0}^{2R} f(z) g(z) \dd z}{\int_{0}^{2R} h(z) g(z) \dd z}
+		\end{aligned}
+	\end{equation}
+	using the equations in \ref{eq:Analytic}, we find:
+	\begin{equation}
+		\begin{aligned}
+			I &= \frac{14}{15} \pi \rho_0 R^4,\\
+			M &= \pi \rho_0 R^3\\
+			\Rightarrow& R_{CoM} = \frac{14}{15} R
+		\end{aligned}
+	\end{equation}
+	I made the random generator by finding the inverse of $g(z)$, took $\rho_0 = 1$ and
+	$R = 10$, this leads to the numerical answer $R_{num} = 9.99854$ and the analytical result
+	of $R_{real} =9.33333$ which raises the error to be about 
+	$\delta = \frac{R_{num} - R_{real}}{R_{real}} \simeq 0.71 = 7.1 \%$
 	
 	\section{Metropolis Random Generation}
 	 I made the function to generate random numbers with a normal distribution using the Metropolis Algorithm.\\
