@@ -19,11 +19,11 @@ class Ising:
 
     def reset(self, beta):
         """ reset the to random data for new temp. """
-        self.data = np.random.choice([-1, 1], size=(self.size, self.size))
+        # self.data = np.random.choice([-1, 1], size=(self.size, self.size))
         self.beta = beta
 
 
-    def ditro(self, x):
+    def distro(self, x):
         """boltzman distribution of energy"""
         if x > 0:
             return np.exp(- self.beta * x)
@@ -76,6 +76,32 @@ class Ising:
         return energy / 2.0
 
 
+    def equalize(self):
+        """ evolve the system to equilibrium """
+        en = []
+        relaxed = False
+        threshold = np.exp(-3)
+        while not relaxed:
+            # evolve 100 times
+            for _ in range(100):
+                self.metropolis()
+                en.append(self.energy())
+
+            # calculate auto_correlation for the j_th distance
+            en_array = np.array(en)
+            j = len(en_array) // 10
+            auto_cor = (np.dot(en_array, np.roll(en_array, j)) / len(en_array)
+                - np.mean(en_array) ** 2) / np.var(en_array)
+
+            print("[Info]:equalize: auto_cor =", auto_cor)
+            # if auto_cor is less than exp(-5), we have reached equilibrium
+            if auto_cor < threshold:
+                relaxed = True
+                print("[Info]:equalize: System Relaxed")
+
+        return np.array(en)
+
+
     def magnetization(self):
         return np.sum(self.data) / self.size ** 2
 
@@ -97,6 +123,20 @@ def corr_len(array):
     # return the first j for which the auto_cor goes under exp(-1)
     return len(auto_cor[auto_cor > np.exp(-1)]) + 1
 
+# ==================================================
+# =================== energies =====================
+# ==================================================
+
+def get_energies(ising, step):
+    """ take data about energies in the step length of cor_len """
+    energies = np.zeros(100)
+    for i in range(100):
+        for _ in range(step):
+            ising.metropolis()
+
+        energies[i] = ising.energy()
+
+    return np.mean(energies), np.var(energies)
 
 # =================================================
 # ==================== Main =======================
@@ -105,40 +145,41 @@ def corr_len(array):
 
 def main():
     """Main body"""
-    n = eval(input("[Input]:main: Enter the number of rounds: "))
-    beta = eval(input("[Input]:main: Enter beta: "))
+    # n = eval(input("[Input]:main: Enter the number of rounds: "))
+    # beta = eval(input("[Input]:main: Enter beta: "))
 
-    ising = Ising(100, beta)
-    energies = np.zeros(n, dtype=float)
+    # Initialize the Ising System
+    ising = Ising(50, 0.1)
+    # make a linear space of beta
+    betas = np.linspace(0.1, 0.7, 40)
 
-    for i in range(n):
-        ising.metropolis()
-        energies[i] = ising.energy()
+    mean_energy_beta = np.zeros(40)
+    var_energy_beta = np.zeros(40)
 
-    print("[Info]:main: Correlation Length =", corr_len(energies))
-    # n = 300
-    # for beta in [0.1, 0.3, 0.45, 0.5, 0.6]:
-    #     ising = Ising(100, beta)
-    #     energies = np.zeros(n, dtype=float)
+    for index in range(len(betas)):
+        ising.reset(betas[index])
 
-    #     for i in range(n):
-    #         ising.metropolis()
-    #         energies[i] = ising.energy()
+        # equalie the system
+        ising.equalize()
 
-    #     plt.plot(np.linspace(1, n, n), energies, label="beta="+str(beta))
+        # Find auto correlation length
+        n = 100
+        en = np.zeros(n)
+        for i in range(n):
+            ising.metropolis()
+            en[i] = ising.energy()
+        cor_len = corr_len(en)
 
-    plt.plot(np.linspace(1, n, n), energies, label="beta="+str(beta))
-    plt.xlabel("unit time (one metropolis run)")
+        # get data
+        mean_energy_beta[index], var_energy_beta[index] = get_energies(ising,
+                                                                       cor_len)
+
+    plt.plot(betas, mean_energy_beta, ls='--', marker='o')
+    plt.xlabel("beta")
     plt.ylabel("Energy E")
     plt.tight_layout()
     plt.grid()
-    plt.legend()
     plt.savefig("energy_plot.jpg", bbox_inches='tight')
-    plt.show()
-
-    plt.pcolor(ising.data)
-    plt.tight_layout()
-    plt.savefig("ising.jpg", bbox_inches='tight')
     plt.show()
 
 
