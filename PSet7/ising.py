@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 # ============== The Ising Class ================
 # ===============================================
 
+
 class Ising:
     """ The ising platform that ising simulation happens """
     def __init__(self, L, beta):
@@ -16,19 +17,17 @@ class Ising:
         self.size = L
         self.decision = np.exp(- beta * np.array([-8, -4, 0, 4, 8]))
 
-
     def reset(self, beta):
         """ reset the to random data for new temp. """
         # self.data = np.random.choice([-1, 1], size=(self.size, self.size))
         self.beta = beta
-
+        self.decision = np.exp(- beta * np.array([-8, -4, 0, 4, 8]))
 
     def distro(self, x):
         """boltzman distribution of energy"""
         if x > 0:
             return np.exp(- self.beta * x)
         return np.power(10, -24)
-
 
     def decide(self, vert, horz):
         """metropolis decision with periodic boundary conditions"""
@@ -49,7 +48,6 @@ class Ising:
         # decide
         return np.random.uniform(0, 1) < self.decision[decision_index]
 
-
     def metropolis(self):
         """ evolve using metropolis """
         # every cell has chance to flip (ammortized)
@@ -58,7 +56,6 @@ class Ising:
             horz = np.random.randint(0, self.size)
             if self.decide(vert, horz):
                 self.data[vert][horz] *= -1
-
 
     def energy(self):
         """ calculate and return the energy of the ising model """
@@ -75,9 +72,10 @@ class Ising:
 
         return energy / 2.0
 
-
     def equalize(self):
         """ evolve the system to equilibrium """
+        # for _ in range(100):
+        #     self.metropolis()
         en = []
         relaxed = False
         threshold = np.exp(-3)
@@ -95,7 +93,7 @@ class Ising:
 
             print("[Info]:equalize: auto_cor =", auto_cor)
             # if auto_cor is less than exp(-5), we have reached equilibrium
-            if auto_cor < threshold:
+            if np.absolute(auto_cor) < threshold:
                 relaxed = True
                 print("[Info]:equalize: System Relaxed")
 
@@ -124,19 +122,61 @@ def corr_len(array):
     return len(auto_cor[auto_cor > np.exp(-1)]) + 1
 
 # ==================================================
-# =================== energies =====================
+# ================= data acquisition ===============
 # ==================================================
 
-def get_energies(ising, step):
+
+def get_data(ising, step):
     """ take data about energies in the step length of cor_len """
     energies = np.zeros(100)
+    mag = np.zeros(100)
     for i in range(100):
         for _ in range(step):
             ising.metropolis()
 
         energies[i] = ising.energy()
+        mag[i] = ising.magnetization()
 
-    return np.mean(energies), np.var(energies)
+    return np.mean(energies), np.var(energies), np.mean(mag), np.var(mag)
+
+# =================================================
+# =================== Simulation ==================
+# =================================================
+
+
+def simulate(length, betas):
+    """ simulate in various temp.s for ising model of length L """
+    # Initialize the Ising System
+    ising = Ising(50, 0.1)
+
+    mean_energy_beta = np.zeros(40)
+    var_energy_beta = np.zeros(40)
+    mean_magnet_beta = np.zeros(40)
+    var_magnet_beta = np.zeros(40)
+
+    for index in range(len(betas)):
+        ising.reset(betas[index])
+        print("\n[Info]:main: beta =", betas[index])
+        # equalie the system
+        ising.equalize()
+
+        # Find auto correlation length
+        n = 100
+        en = np.zeros(n)
+        for i in range(n):
+            ising.metropolis()
+            en[i] = ising.energy()
+        cor_len = corr_len(en)
+        print("[Info]:main: corr_len =", cor_len)
+
+        # get data
+        mean_energy_beta[index], var_energy_beta[index], mean_magnet_beta[index], var_magnet_beta[index] = get_data(ising, 10)
+
+    # calculate ksi and heat capacity
+    ksi = betas * var_magnet_beta
+    heat_capacity = betas ** 2 * var_energy_beta
+
+    return mean_energy_beta, mean_magnet_beta, ksi, heat_capacity
 
 # =================================================
 # ==================== Main =======================
@@ -148,39 +188,57 @@ def main():
     # n = eval(input("[Input]:main: Enter the number of rounds: "))
     # beta = eval(input("[Input]:main: Enter beta: "))
 
-    # Initialize the Ising System
-    ising = Ising(50, 0.1)
     # make a linear space of beta
     betas = np.linspace(0.1, 0.7, 40)
+    # choose length of the ising model
+    length = 100
+    # simulate
+    print("[Info]:main: Ising size =", length)
+    energy, magnet, ksi, heat_cap = simulate(length, betas)
 
-    mean_energy_beta = np.zeros(40)
-    var_energy_beta = np.zeros(40)
-
-    for index in range(len(betas)):
-        ising.reset(betas[index])
-
-        # equalie the system
-        ising.equalize()
-
-        # Find auto correlation length
-        n = 100
-        en = np.zeros(n)
-        for i in range(n):
-            ising.metropolis()
-            en[i] = ising.energy()
-        cor_len = corr_len(en)
-
-        # get data
-        mean_energy_beta[index], var_energy_beta[index] = get_energies(ising,
-                                                                       cor_len)
-
-    plt.plot(betas, mean_energy_beta, ls='--', marker='o')
+    # plot heat capacity
+    plt.plot(betas, heat_cap, ls='-.', marker='^',
+             label="ising size =" + str(length))
     plt.xlabel("beta")
-    plt.ylabel("Energy E")
+    plt.ylabel("C_v")
     plt.tight_layout()
+    plt.legend()
+    plt.grid()
+    plt.savefig("heat_cap_plot.jpg", bbox_inches='tight')
+    plt.close()
+
+    # plot ksi
+    plt.plot(betas, ksi, ls='-.', marker='o',
+             label="ising size =" + str(length))
+    plt.xlabel("beta")
+    plt.ylabel("ksi")
+    plt.tight_layout()
+    plt.legend()
+    plt.grid()
+    plt.savefig("ksi_plot.jpg", bbox_inches='tight')
+    plt.close()
+
+    # plot magnetization
+    plt.plot(betas, magnet, ls='--', marker='o',
+             label="ising size =" + str(length))
+    plt.xlabel("beta")
+    plt.ylabel("<M>")
+    plt.tight_layout()
+    plt.legend()
+    plt.grid()
+    plt.savefig("mag_plot.jpg", bbox_inches='tight')
+    plt.close()
+
+    # plot energy
+    plt.plot(betas, energy, ls='--', marker='*',
+             label="ising size =" + str(length))
+    plt.xlabel("beta")
+    plt.ylabel("<E>")
+    plt.tight_layout()
+    plt.legend()
     plt.grid()
     plt.savefig("energy_plot.jpg", bbox_inches='tight')
-    plt.show()
+    plt.close()
 
 
 if __name__ == "__main__":
