@@ -2,6 +2,7 @@
 
 
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 # ===============================================
@@ -101,7 +102,7 @@ class Ising:
 
 
     def magnetization(self):
-        return np.sum(self.data) / self.size ** 2
+        return np.absolute(np.sum(self.data) / self.size ** 2)
 
 
 # =================================================
@@ -188,17 +189,36 @@ def main():
     # n = eval(input("[Input]:main: Enter the number of rounds: "))
     # beta = eval(input("[Input]:main: Enter beta: "))
 
+    # make length range
+    lengths = np.array([100, 110, 130, 160, 200])
     # make a linear space of beta
     betas = np.linspace(0.1, 0.7, 40)
+    # initialize the data set
+    energy = np.zeros(shape=(len(lengths), len(betas)))
+    magnet = np.zeros(shape=(len(lengths), len(betas)))
+    ksi = np.zeros(shape=(len(lengths), len(betas)))
+    heat_cap = np.zeros(shape=(len(lengths), len(betas)))
+
     # choose length of the ising model
-    length = 100
-    # simulate
-    print("[Info]:main: Ising size =", length)
-    energy, magnet, ksi, heat_cap = simulate(length, betas)
+    for i in range(len(lengths)):
+        # simulate
+        print("[Info]:main: Ising size =", lengths[i])
+        energy[i], magnet[i], ksi[i], heat_cap[i] = simulate(lengths[i], betas)
+
+    # save data to CSV files
+    df_energy = pd.DataFrame(energy)
+    df_energy.to_csv("energy.csv")
+    df_magnet = pd.DataFrame(magnet)
+    df_magnet.to_csv("magnet.csv")
+    df_ksi = pd.DataFrame(ksi)
+    df_ksi.to_csv("ksi.csv")
+    df_heat_cap = pd.DataFrame(heat_cap)
+    df_heat_cap.to_csv("heat_cap.csv")
 
     # plot heat capacity
-    plt.plot(betas, heat_cap, ls='-.', marker='^',
-             label="ising size =" + str(length))
+    for i in range(len(lengths)):
+        plt.plot(betas, heat_cap, ls='-.', marker='^',
+                 label="ising size =" + str(lengths[i]))
     plt.xlabel("beta")
     plt.ylabel("C_v")
     plt.tight_layout()
@@ -208,8 +228,9 @@ def main():
     plt.close()
 
     # plot ksi
-    plt.plot(betas, ksi, ls='-.', marker='o',
-             label="ising size =" + str(length))
+    for i in range(len(lengths)):
+        plt.plot(betas, ksi, ls='-.', marker='o',
+                 label="ising size =" + str(lengths[i]))
     plt.xlabel("beta")
     plt.ylabel("ksi")
     plt.tight_layout()
@@ -219,8 +240,9 @@ def main():
     plt.close()
 
     # plot magnetization
-    plt.plot(betas, magnet, ls='--', marker='o',
-             label="ising size =" + str(length))
+    for i in range(len(lengths)):
+        plt.plot(betas, magnet, ls='--', marker='o',
+                 label="ising size =" + str(lengths[i]))
     plt.xlabel("beta")
     plt.ylabel("<M>")
     plt.tight_layout()
@@ -230,8 +252,9 @@ def main():
     plt.close()
 
     # plot energy
-    plt.plot(betas, energy, ls='--', marker='*',
-             label="ising size =" + str(length))
+    for i in range(len(lengths)):
+        plt.plot(betas, energy, ls='--', marker='*',
+                 label="ising size =" + str(lengths[i]))
     plt.xlabel("beta")
     plt.ylabel("<E>")
     plt.tight_layout()
