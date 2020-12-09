@@ -217,7 +217,7 @@ def main():
 
     # plot heat capacity
     for i in range(len(lengths)):
-        plt.plot(betas, heat_cap, ls='-.', marker='^',
+        plt.plot(betas, heat_cap[i], ls='-.', marker='^',
                  label="ising size =" + str(lengths[i]))
     plt.xlabel("beta")
     plt.ylabel("C_v")
@@ -229,7 +229,7 @@ def main():
 
     # plot ksi
     for i in range(len(lengths)):
-        plt.plot(betas, ksi, ls='-.', marker='o',
+        plt.plot(betas, ksi[i], ls='-.', marker='o',
                  label="ising size =" + str(lengths[i]))
     plt.xlabel("beta")
     plt.ylabel("ksi")
@@ -241,7 +241,7 @@ def main():
 
     # plot magnetization
     for i in range(len(lengths)):
-        plt.plot(betas, magnet, ls='--', marker='o',
+        plt.plot(betas, magnet[i], ls='--', marker='o',
                  label="ising size =" + str(lengths[i]))
     plt.xlabel("beta")
     plt.ylabel("<M>")
@@ -253,7 +253,7 @@ def main():
 
     # plot energy
     for i in range(len(lengths)):
-        plt.plot(betas, energy, ls='--', marker='*',
+        plt.plot(betas, energy[i], ls='--', marker='*',
                  label="ising size =" + str(lengths[i]))
     plt.xlabel("beta")
     plt.ylabel("<E>")
