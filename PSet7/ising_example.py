@@ -10,8 +10,8 @@ def before_after(size, beta, file_name):
     """ simulate for size and beta """
     ising = Ising(size, beta)
     before = ising.data.copy()
-    # do metropolis 100 times
-    for _ in range(100):
+    # do metropolis 200 times
+    for _ in range(200):
         ising.metropolis()
 
     # draw
@@ -22,7 +22,6 @@ def before_after(size, beta, file_name):
     ax1.set_title("before")
     ax2.pcolor(ising.data)
     ax2.set_title("after")
-    plt.title("beta = " + str(beta))
     plt.savefig(file_name, dpi=300, bbox_inches='tight')
     plt.close()
 

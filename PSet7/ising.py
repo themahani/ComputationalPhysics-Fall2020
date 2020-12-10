@@ -100,14 +100,23 @@ class Ising:
 
         return np.array(en)
 
-
     def magnetization(self):
+        """ return absolute value of mean magnetization per spin """
         return np.absolute(np.sum(self.data) / self.size ** 2)
 
+    def spin_cor(self):
+        """
+            calculate the spatial auto-correlation of spins on
+            on the grid and its error
+        """
+        cor_len = corr_len(np.mean(self.data, axis=1))
+
+        return cor_len
 
 # =================================================
 # ============= Auto Correlation Length ===========
 # =================================================
+
 
 def corr_len(array):
     """ take 1-D array and return auto-correlation length """
@@ -131,14 +140,16 @@ def get_data(ising, step):
     """ take data about energies in the step length of cor_len """
     energies = np.zeros(100)
     mag = np.zeros(100)
+    spin_cor = np.zeros(100)
     for i in range(100):
         for _ in range(step):
             ising.metropolis()
 
         energies[i] = ising.energy()
         mag[i] = ising.magnetization()
+        spin_cor[i] = ising.spin_cor()
 
-    return np.mean(energies), np.var(energies), np.mean(mag), np.var(mag)
+    return np.mean(energies), np.var(energies), np.mean(mag), np.var(mag), np.mean(spin_cor), np.sqrt(np.var(spin_cor))
 
 # =================================================
 # =================== Simulation ==================
@@ -154,6 +165,7 @@ def simulate(length, betas):
     var_energy_beta = np.zeros(40)
     mean_magnet_beta = np.zeros(40)
     var_magnet_beta = np.zeros(40)
+    spin_correlation = np.zeros((40, 2))
 
     for index in range(len(betas)):
         ising.reset(betas[index])
@@ -171,13 +183,13 @@ def simulate(length, betas):
         print("[Info]:main: corr_len =", cor_len)
 
         # get data
-        mean_energy_beta[index], var_energy_beta[index], mean_magnet_beta[index], var_magnet_beta[index] = get_data(ising, 10)
+        mean_energy_beta[index], var_energy_beta[index], mean_magnet_beta[index], var_magnet_beta[index], spin_correlation[index, 0], spin_correlation[index, 1] = get_data(ising, 10)
 
     # calculate ksi and heat capacity
     ksi = betas * var_magnet_beta
     heat_capacity = betas ** 2 * var_energy_beta
 
-    return mean_energy_beta, mean_magnet_beta, ksi, heat_capacity
+    return mean_energy_beta, mean_magnet_beta, ksi, heat_capacity, spin_correlation
 
 # =================================================
 # ==================== Main =======================
@@ -198,70 +210,30 @@ def main():
     magnet = np.zeros(shape=(len(lengths), len(betas)))
     ksi = np.zeros(shape=(len(lengths), len(betas)))
     heat_cap = np.zeros(shape=(len(lengths), len(betas)))
+    spin_cor = np.zeros(shape=(len(lengths), len(betas), 2))
 
     # choose length of the ising model
-    for i in range(len(lengths)):
+    for i in range(1):
         # simulate
         print("[Info]:main: Ising size =", lengths[i])
-        energy[i], magnet[i], ksi[i], heat_cap[i] = simulate(lengths[i], betas)
+        energy[i], magnet[i], ksi[i], heat_cap[i], spin_cor[i] = simulate(lengths[i], betas)
 
     # save data to CSV files
-    df_energy = pd.DataFrame(energy)
-    df_energy.to_csv("energy.csv")
-    df_magnet = pd.DataFrame(magnet)
-    df_magnet.to_csv("magnet.csv")
-    df_ksi = pd.DataFrame(ksi)
-    df_ksi.to_csv("ksi.csv")
-    df_heat_cap = pd.DataFrame(heat_cap)
-    df_heat_cap.to_csv("heat_cap.csv")
+    # df_energy = pd.DataFrame(energy)
+    # df_energy.to_csv("energy.csv")
+    # df_magnet = pd.DataFrame(magnet)
+    # df_magnet.to_csv("magnet.csv")
+    # df_ksi = pd.DataFrame(ksi)
+    # df_ksi.to_csv("ksi.csv")
+    # df_heat_cap = pd.DataFrame(heat_cap)
+    # df_heat_cap.to_csv("heat_cap.csv")
+    df_spin_cor = pd.DataFrame(spin_cor[0, :, :])
+    df_spin_cor.to_csv("spin_cor.csv")
 
-    # plot heat capacity
-    for i in range(len(lengths)):
-        plt.plot(betas, heat_cap[i], ls='-.', marker='^',
-                 label="ising size =" + str(lengths[i]))
-    plt.xlabel("beta")
-    plt.ylabel("C_v")
-    plt.tight_layout()
-    plt.legend()
-    plt.grid()
-    plt.savefig("heat_cap_plot.jpg", bbox_inches='tight')
-    plt.close()
-
-    # plot ksi
-    for i in range(len(lengths)):
-        plt.plot(betas, ksi[i], ls='-.', marker='o',
-                 label="ising size =" + str(lengths[i]))
-    plt.xlabel("beta")
-    plt.ylabel("ksi")
-    plt.tight_layout()
-    plt.legend()
-    plt.grid()
-    plt.savefig("ksi_plot.jpg", bbox_inches='tight')
-    plt.close()
-
-    # plot magnetization
-    for i in range(len(lengths)):
-        plt.plot(betas, magnet[i], ls='--', marker='o',
-                 label="ising size =" + str(lengths[i]))
-    plt.xlabel("beta")
-    plt.ylabel("<M>")
-    plt.tight_layout()
-    plt.legend()
-    plt.grid()
-    plt.savefig("mag_plot.jpg", bbox_inches='tight')
-    plt.close()
-
-    # plot energy
-    for i in range(len(lengths)):
-        plt.plot(betas, energy[i], ls='--', marker='*',
-                 label="ising size =" + str(lengths[i]))
-    plt.xlabel("beta")
-    plt.ylabel("<E>")
-    plt.tight_layout()
-    plt.legend()
-    plt.grid()
-    plt.savefig("energy_plot.jpg", bbox_inches='tight')
-    plt.close()
+    plt.errorbar(x=betas, y=spin_cor[0, :, 0], yerr=spin_cor[0, :, 1],
+                 ls='-.', marker='o')
+    plt.savefig('test.jpg')
+    plt.show()
 
 
 if __name__ == "__main__":
