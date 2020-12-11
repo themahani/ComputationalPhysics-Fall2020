@@ -109,9 +109,11 @@ class Ising:
             calculate the spatial auto-correlation of spins on
             on the grid and its error
         """
-        cor_len = corr_len(np.mean(self.data, axis=1))
+        cor_lens = np.zeros(self.size)
+        for i in range(self.size):
+            cor_lens[i] = corr_len(self.data[i])
 
-        return cor_len
+        return np.mean(cor_lens)
 
 # =================================================
 # ============= Auto Correlation Length ===========
@@ -184,13 +186,17 @@ def simulate(length, betas):
         print("[Info]:main: corr_len =", cor_len)
 
         # get data
-        mean_energy_beta[index], var_energy_beta[index], mean_magnet_beta[index], var_magnet_beta[index], spin_correlation[index, 0], spin_correlation[index, 1] = get_data(ising, 10)
+        mean_energy_beta[index], var_energy_beta[index], \
+            mean_magnet_beta[index], var_magnet_beta[index], \
+            spin_correlation[index, 0], \
+            spin_correlation[index, 1] = get_data(ising, 10)
 
     # calculate ksi and heat capacity
     ksi = betas * var_magnet_beta
     heat_capacity = betas ** 2 * var_energy_beta
 
-    return mean_energy_beta, mean_magnet_beta, ksi, heat_capacity, spin_correlation
+    return mean_energy_beta, mean_magnet_beta, \
+        ksi, heat_capacity, spin_correlation
 
 # =================================================
 # ==================== Main =======================
@@ -199,9 +205,6 @@ def simulate(length, betas):
 
 def main():
     """Main body"""
-    # n = eval(input("[Input]:main: Enter the number of rounds: "))
-    # beta = eval(input("[Input]:main: Enter beta: "))
-
     # make length range
     lengths = np.array([100, 110, 130, 160, 200])
     # make a linear space of beta
@@ -217,7 +220,8 @@ def main():
     for i in range(len(lengths)):
         # simulate
         print("[Info]:main: Ising size =", lengths[i])
-        energy[i], magnet[i], ksi[i], heat_cap[i], spin_cor[i] = simulate(lengths[i], betas)
+        energy[i], magnet[i], ksi[i], heat_cap[i], \
+            spin_cor[i] = simulate(lengths[i], betas)
 
     # save data to CSV files
     df_energy = pd.DataFrame(energy)
