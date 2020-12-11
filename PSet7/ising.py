@@ -161,11 +161,12 @@ def simulate(length, betas):
     # Initialize the Ising System
     ising = Ising(50, 0.1)
 
-    mean_energy_beta = np.zeros(40)
-    var_energy_beta = np.zeros(40)
-    mean_magnet_beta = np.zeros(40)
-    var_magnet_beta = np.zeros(40)
-    spin_correlation = np.zeros((40, 2))
+    n = 80
+    mean_energy_beta = np.zeros(n)
+    var_energy_beta = np.zeros(n)
+    mean_magnet_beta = np.zeros(n)
+    var_magnet_beta = np.zeros(n)
+    spin_correlation = np.zeros((n, 2))
 
     for index in range(len(betas)):
         ising.reset(betas[index])
@@ -174,9 +175,9 @@ def simulate(length, betas):
         ising.equalize()
 
         # Find auto correlation length
-        n = 100
-        en = np.zeros(n)
-        for i in range(n):
+        m = 100
+        en = np.zeros(m)
+        for i in range(m):
             ising.metropolis()
             en[i] = ising.energy()
         cor_len = corr_len(en)
@@ -204,7 +205,7 @@ def main():
     # make length range
     lengths = np.array([100, 110, 130, 160, 200])
     # make a linear space of beta
-    betas = np.linspace(0.1, 0.7, 40)
+    betas = np.linspace(0.1, 0.7, 80)
     # initialize the data set
     energy = np.zeros(shape=(len(lengths), len(betas)))
     magnet = np.zeros(shape=(len(lengths), len(betas)))
@@ -213,27 +214,25 @@ def main():
     spin_cor = np.zeros(shape=(len(lengths), len(betas), 2))
 
     # choose length of the ising model
-    for i in range(1):
+    for i in range(len(lengths)):
         # simulate
         print("[Info]:main: Ising size =", lengths[i])
         energy[i], magnet[i], ksi[i], heat_cap[i], spin_cor[i] = simulate(lengths[i], betas)
 
     # save data to CSV files
-    # df_energy = pd.DataFrame(energy)
-    # df_energy.to_csv("energy.csv")
-    # df_magnet = pd.DataFrame(magnet)
-    # df_magnet.to_csv("magnet.csv")
-    # df_ksi = pd.DataFrame(ksi)
-    # df_ksi.to_csv("ksi.csv")
-    # df_heat_cap = pd.DataFrame(heat_cap)
-    # df_heat_cap.to_csv("heat_cap.csv")
-    df_spin_cor = pd.DataFrame(spin_cor[0, :, :])
+    df_energy = pd.DataFrame(energy)
+    df_energy.to_csv("energy.csv")
+    df_magnet = pd.DataFrame(magnet)
+    df_magnet.to_csv("magnet.csv")
+    df_ksi = pd.DataFrame(ksi)
+    df_ksi.to_csv("ksi.csv")
+    df_heat_cap = pd.DataFrame(heat_cap)
+    df_heat_cap.to_csv("heat_cap.csv")
+    df_spin_cor = pd.DataFrame(spin_cor[:, :, 0])
     df_spin_cor.to_csv("spin_cor.csv")
+    df_spin_cor_error = pd.DataFrame(spin_cor[:, :, 1])
+    df_spin_cor_error.to_csv("spin_cor_error.csv")
 
-    plt.errorbar(x=betas, y=spin_cor[0, :, 0], yerr=spin_cor[0, :, 1],
-                 ls='-.', marker='o')
-    plt.savefig('test.jpg')
-    plt.show()
 
 
 if __name__ == "__main__":
