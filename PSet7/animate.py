@@ -27,7 +27,7 @@ def animate_ising(size, beta, frames):
 
         ising.metropolis()
         fig = display()
-        ax.set_title('beta= '+ str(beta) + 't = ' + str(t))
+        ax.set_title('beta= '+ str(beta) + ', t = ' + str(t))
 
         return fig
 
