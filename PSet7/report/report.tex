@@ -54,9 +54,10 @@ footskip=.25in]{geometry}
 		\includegraphics[width=0.45\linewidth]{../magnet_plot.jpg}
 		\includegraphics[width=0.45\linewidth]{../ksi_plot.jpg}
 		\includegraphics[width=0.45\linewidth]{../heat_cap_plot.jpg}
+		\includegraphics[width=0.45\linewidth]{../spin_cor_plot.jpg}
 		\label{fig:data}
 		\caption{Data vs. beta for $\beta$ from $0.1$ to $0.7$ and ising size in 
-			$\{100, 110, 130, 160, 200\}$. from left to right and top down, we have \emph{energy}, \emph{magnetization}, \emph{ksi}, \emph{heat capacity}}
+			$\{100, 110, 130, 160, 200\}$. from left to right and top down, we have \emph{energy}, \emph{magnetization}, \emph{ksi}, \emph{heat capacity}, $\xi$ \emph{only for $L = 100$}.}
 	\end{figure}
 	
 	As for how I selected and changed the temperature, I started from high temp., 
@@ -65,5 +66,19 @@ footskip=.25in]{geometry}
 	condition of the system with new $\beta$. This way the necessary time to reach equilibrium is decreased and so is the risk of the system freezing.
 	
 	\section{Finding the critical exponents $\nu, \mu, \beta$ and the Coefficient $c_0$}
+	The value for $c_0$ was found by fitting a log-log polynomial of degree 1 to the data. The function for $c_0$ is:
+	\begin{equation}
+		c_v = c_0 \ln(|T - T_c|), c_0 = 7.24 \pm 0.07
+	\end{equation}
 	
+	For the other parameters since we have already shown the plots, we'll just report the numerical values here.
+	\begin{equation}
+	\begin{aligned}
+		m &\sim L^{-\frac{\beta}{\nu}}, \qquad \beta = \pm \\
+		\chi &\sim L^{-\frac{\gamma}{\nu}}, \qquad \frac{\gamma}{\nu} = - 1.49 \pm 0.56\\
+		C_v &\sim L^{-\frac{\alpha}{\nu}}, \qquad \frac{\alpha}{\nu} = - 0.79 \pm 0.12\\
+		\xi & \sim L^{-\frac{1}{\nu}}, \qquad \frac{1}{\nu} = 0.02\pm 0.08
+	\end{aligned}
+	\end{equation}
+
 \end{document}
