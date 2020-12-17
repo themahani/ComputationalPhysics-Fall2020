@@ -25,10 +25,14 @@ footskip=.25in]{geometry}
 	The change of variables is as follows:
 	\begin{equation}
 		\begin{aligned}
-			&x \equiv \frac{Q}{C V}, \quad \tau \equiv \frac{t}{R C} \;\Rightarrow \; \frac{R C}{C V} \dv{x}{\tau} + \frac{x}{R} = V\\
-			\Rightarrow  \dv{x}{\tau} &= - \frac{V}{R^2} x + \frac{V^2}{R}
+			&x \equiv \frac{Q}{R C} - \frac{V}{R}, \quad \tau \equiv \frac{t}{R C}\\
+			\Rightarrow  &\dv{x}{\tau} + x = 0
 		\end{aligned}
 	\end{equation}
+	
+	Using this change in variables, the time limit becomes: $\tau = \frac{0.5 ms}{10^{-6} F \times 3000 \Omega} = \frac{1}{6} s$
+	Also, if we want the capacitor to start from being empty, the initial value for $x$ will be: $x_0 = \frac{1}{300} \frac{volts}{\Omega}$
+	
 	
 	\section{$2^{nd}$ Order ODE}
 	I made all the functions to take variables \texttt{x\_init, acc, step, time}. \texttt{x\_init} is the initial position of the mass from the origin.
