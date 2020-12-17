@@ -36,8 +36,54 @@ footskip=.25in]{geometry}
 	The analytical solution is obtained by integrating the equation $\frac{\dd{x}}{x} = \dd{\tau}$
 	which gives:
 	\begin{equation} \label{eq:analytical}
-		x = x_0 \exp(- \tau)
+		x = x_0 \exp(- \tau) \Rightarrow Q = C V (1 - e^{- \frac{t}{R C}})
 	\end{equation}
+
+	I integrated numerically for $x$ and then used a reverse version of our change of variables, to find $Q$. Then, I plotted the analytical solution
+	for $Q$ and the integration in the same graph. (Fig.\ref{fig:euler})
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.8\linewidth]{../p1/capacitor.jpg}
+		\label{fig:euler}
+		\caption{Analytical and numerical solution for the charging capacitor equation. The time step for the numerical solution here is $0.01$}
+	\end{figure}
+
+	For the second part, I found the difference in numeric and analytic method, $\delta$, at $t = 0.5 ms$ for various values of the time step.
+	The data is available in table \ref{tab:error}, and the plot, in Fig.\ref{fig:error}
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{|c|c|}
+			\hline
+			$h$ & $\delta$\\
+			\hline
+			$0.001$ & $0.00282761$ \\
+			\hline
+			$0.005$ & $0.00284087$ \\
+			\hline
+			$0.01$ & $0.002868396$ \\
+			\hline
+			$0.015$ & $0.00286730$ \\
+			\hline
+			$0.02$ & $0.002895286$ \\
+			\hline
+			$0.03$ & $0.002952511$ \\
+			\hline
+			$0.04$ & $0.002950655$ \\
+			\hline
+			$0.05$ & $0.003009868$ \\
+			\hline
+		\end{tabular}
+	\label{tab:error}
+	\caption{The values of $\delta$ for different values of time step $h$.}
+	\end{table}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.8\linewidth]{../p1/error.jpg}
+		\label{fig:error}
+		\caption{Plot for \emph{delta} vs. \emph{$h$}, the slope is found out to be $0.0036 \pm 0.0003$}
+	\end{figure}
+
 	\section{$2^{nd}$ Order ODE}
 	I made all the functions to take variables \texttt{x\_init, acc, step, time}. \texttt{x\_init} is the initial position of the mass from the origin.
 	\texttt{acc} is the function that returns the \emph{acceleration} as a function of position \texttt{x}.
@@ -85,13 +131,13 @@ footskip=.25in]{geometry}
 	numerical solution in one graph to compare them.
 	
 	In small values for terminating the integration, the numerical solution seems to be stable, but if we wait long enough, we can see that
-	from about $\tau = 6.0$, the numerical integration shows signs of periodic motions and oscilation around the analytical solution. 
+	from about $\tau = 6.0$, the numerical integration shows signs of periodic motions and oscillation around the analytical solution. 
 	(Fig.\ref{fig:instability})
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.8\linewidth]{../p3/instability.jpg}
 		\label{fig:instability}
-		\caption{numerical solution using the algorithm from eq\ref{eq:instability}, shows oscilation about the analytical solution for 
+		\caption{numerical solution using the algorithm from eq\ref{eq:instability}, shows oscillation about the analytical solution for 
 			large enough $\tau$, which represents instability for this algorithm in this perticular problem.}
 	\end{figure}
 
