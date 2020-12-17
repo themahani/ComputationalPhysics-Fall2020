@@ -23,7 +23,7 @@ footskip=.25in]{geometry}
 	Since the numbers are a little overwhelming, we make parameter changes to come up with better numbers for our simulation.
 	
 	The change of variables is as follows:
-	\begin{equation}
+	\begin{equation} \label{eq:change}
 		\begin{aligned}
 			&x \equiv \frac{Q}{R C} - \frac{V}{R}, \quad \tau \equiv \frac{t}{R C}\\
 			\Rightarrow  &\dv{x}{\tau} + x = 0
@@ -33,7 +33,11 @@ footskip=.25in]{geometry}
 	Using this change in variables, the time limit becomes: $\tau = \frac{0.5 ms}{10^{-6} F \times 3000 \Omega} = \frac{1}{6} s$
 	Also, if we want the capacitor to start from being empty, the initial value for $x$ will be: $x_0 = \frac{1}{300} \frac{volts}{\Omega}$
 	
-	
+	The analytical solution is obtained by integrating the equation $\frac{\dd{x}}{x} = \dd{\tau}$
+	which gives:
+	\begin{equation} \label{eq:analytical}
+		x = x_0 \exp(- \tau)
+	\end{equation}
 	\section{$2^{nd}$ Order ODE}
 	I made all the functions to take variables \texttt{x\_init, acc, step, time}. \texttt{x\_init} is the initial position of the mass from the origin.
 	\texttt{acc} is the function that returns the \emph{acceleration} as a function of position \texttt{x}.
@@ -70,6 +74,28 @@ footskip=.25in]{geometry}
 	As can be seen from Fig\ref{fig:energy}, the \emph{verlat}, \emph{velocity verlat}, and \emph{beeman} methods have stability for this
 	problem.
 	
+	\section{Instability in algorithms}
+	Here we use the same change in variables that we did in equation\ref{eq:change} to simulate the charging capacitor.
+	The algorithm we are going to use here is as follows:
+	\begin{equation} \label{eq:instability}
+		y_{n + 1} = y_{n - 1} + 2 \dot{y}_n h
+	\end{equation}
+	where $h$ is the time step. Since this is a two step algorithm, we need a second initial value that we get using the Euler method. From that point
+	forward, we use the algorithm in equation\ref{eq:instability}. Then, we plot both the analytical solution (eq.\ref{eq:analytical}) and the 
+	numerical solution in one graph to compare them.
+	
+	In small values for terminating the integration, the numerical solution seems to be stable, but if we wait long enough, we can see that
+	from about $\tau = 6.0$, the numerical integration shows signs of periodic motions and oscilation around the analytical solution. 
+	(Fig.\ref{fig:instability})
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.8\linewidth]{../p3/instability.jpg}
+		\label{fig:instability}
+		\caption{numerical solution using the algorithm from eq\ref{eq:instability}, shows oscilation about the analytical solution for 
+			large enough $\tau$, which represents instability for this algorithm in this perticular problem.}
+	\end{figure}
+
+	It can also be seen that for higher values of the time step, the instability manifests much sooner and explodes more rapidly.
 
 
 \end{document}

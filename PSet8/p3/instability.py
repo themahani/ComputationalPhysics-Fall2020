@@ -55,6 +55,8 @@ def main():
     # plot both solutions in a graph
     plt.plot(time, record, 'r-.', label='numerical')
     plt.plot(time, analytical_sol(time), 'b--', label='analytical')
+    plt.xlabel('tau')
+    plt.ylabel('solutions')
     plt.legend()
     plt.savefig('instability.jpg', bbox_inches='tight')
     plt.show()
