@@ -35,22 +35,18 @@ def x_dot(x):
 
 def analytical_sol(x):
     """ function to draw analytical solution """
-    return -1 / 600 * np.exp(-x)
+    return -1 / 300 * np.exp(-x)
 
 
 def main():
     """ main body """
     # constants
     x_init = - 1 / 300
-    end = 0.020
-    step = 0.0001
-    voltage = 10.0
-    resistance = 3000.0
-    capacity = 0.000001
+    end = 15
+    step = 0.001
 
     # integrate numerically
     record, count = num_solve(x_init, x_dot, step, end)
-    # record = (record + voltage / resistance) * resistance * capacity
     print(record)
 
     # time axis
@@ -60,9 +56,8 @@ def main():
     plt.plot(time, record, 'r-.', label='numerical')
     plt.plot(time, analytical_sol(time), 'b--', label='analytical')
     plt.legend()
+    plt.savefig('instability.jpg', bbox_inches='tight')
     plt.show()
-
-
 
 
 if __name__ == "__main__":
