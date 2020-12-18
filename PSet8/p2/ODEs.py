@@ -85,7 +85,7 @@ def beeman(x_init, acc, step, time):
     # initialize
     x = np.zeros(count + 1)
     x_dot = np.zeros(count + 1)
-    x[0:2] = x_init, x_init
+    x[0:2] = x_init
     x_dot[0] = 0
 
     for i in range(1, count):
