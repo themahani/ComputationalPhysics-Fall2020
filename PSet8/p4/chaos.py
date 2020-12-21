@@ -14,40 +14,49 @@ def f(x, r):
     return 4 * r * x * (1 - x)
 
 
-def stable_point(x, r):
+def stable_point(r):
     """
     repeat the process n times to
     make sure we have reaches fixed points
     """
-    n = 1000
-    for _ in range(n):
-        x = f(x, r)
+    n = 1500
+    x = np.zeros(n)
+    x[0] = np.random.uniform(0, 0.5)
+    for i in range(n - 1):
+        x[i + 1] = f(x[i], r)
 
-    return x.copy()
+    print(x[-200:])
+
+    return x[-200:]
 
 
 def main():
     """ main body """
     # constants
-    n = 1001
-    x_0 = np.array([[0.1, 0.3, 0.6, 0.7]]).T
+    n = 200
     # r axis
     r_axis = np.linspace(0.1, 1, n)
+
     # x axis
-    x_fix = np.zeros((len(x_0), n))
+    x_fix = np.zeros(200 * n)
+    x_fix = np.array([])
+
     # simulate for different r
     for enum in enumerate(r_axis):
-        x_fix[:, enum[0]] = stable_point(x_0, enum[1]).T
+        # x_fix[200 * enum[0]: 200 * (enum[0] + 1)] = stable_point(enum[1])
+        x_fix = np.hstack((x_fix, stable_point(enum[1])))
 
     print(x_fix)
 
-    plt.plot(r_axis, x_fix[0, :], ls='', marker='o', ms=1)
-    plt.plot(r_axis, x_fix[1, :], ls='', marker='o', ms=1)
-    plt.plot(r_axis, x_fix[2, :], ls='', marker='o', ms=1)
-    plt.plot(r_axis, x_fix[3, :], ls='', marker='o', ms=1)
+    # repeat each value of r 200 times for the plot
+    r_axis = np.repeat(r_axis, 200)
+
+    # plot
+    plt.plot(r_axis, x_fix, ls='', marker='o', ms=1)
     plt.xlabel('r')
     plt.ylabel('x_fix')
     plt.title('bifurcation plot')
+    plt.savefig("bifurcation.jpg", dpi=200, bbox_inches='tight')
     plt.show()
 
 

@@ -62,7 +62,7 @@ def main():
     # =================================
 
     # list of steps to find delta
-    steps = [0.001, 0.005, 0.01, 0.015, 0.02, 0.03, 0.04, 0.05]
+    steps = np.power(10, np.linspace(-8, -3, 20))
     # find the expected value of Q using the analytical solution
     x_end = analytical_sol(end)
 
@@ -71,25 +71,26 @@ def main():
 
     # data aquisition
     for step in steps:
-        record, _ = euler(x_init, x_dot, step, end)
+        print('[Info]:main:Part B: step =', step)
+        record, _ = euler(x_init, x_dot, step, 10 * end)
         delta.append(x_end - record[-1])
     print(delta)
 
     # fit line to data
-    popt, pcov = np.polyfit(steps, delta, deg=1, full=False, cov=True)
+    # popt, pcov = np.polyfit(steps, delta, deg=1, full=False, cov=True)
 
     # plot the data and the fit line
-    plt.plot(steps, delta, 'ro', label='data')
-    plt.plot(steps, popt[1] + popt[0] * np.array(steps),
-             'g-.', label='fit line')
-    plt.xlabel('time step h')
-    plt.ylabel('error delta')
+    plt.plot(np.log10(steps), np.log10(delta), 'ro-.', label='data')
+    # plt.plot(steps, popt[1] + popt[0] * np.array(steps),
+    #          'g-.', label='fit line')
+    plt.xlabel('time step log(h)')
+    plt.ylabel('error log(delta)')
     plt.legend()
     plt.savefig('error.jpg', bbox_inches='tight')
     plt.show()
 
     # find slope of the line
-    print("slope is:", popt[0], "(+/-)", np.sqrt(np.diag(pcov))[0])
+    # print("slope is:", popt[0], "(+/-)", np.sqrt(np.diag(pcov))[0])
 
 if __name__ == "__main__":
     main()
