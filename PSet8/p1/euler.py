@@ -14,6 +14,7 @@ def euler(x_init, func, step, time):
     """ euler method """
     # find count
     count = int(time / step)
+    count += 1
 
     # initializations
     x = np.zeros(count)
@@ -62,7 +63,7 @@ def main():
     # =================================
 
     # list of steps to find delta
-    steps = np.power(10, np.linspace(-5, -1, 30))
+    steps = np.power(10, np.linspace(-8, -2, 40))
     # find the expected value of Q using the analytical solution
     x_end = analytical_sol(end)
 
@@ -72,7 +73,7 @@ def main():
     # data aquisition
     for step in steps:
         print('[Info]:main:Part B: step =', step)
-        record, _ = euler(x_init, x_dot, step, 100 * end)
+        record, _ = euler(x_init, x_dot, step, end)
         # return to Q since we simulated x (more details in report)
         record[-1] = 0.003 * (record[-1] + 1 / 300)
         delta.append(np.absolute(x_end - record[-1]))

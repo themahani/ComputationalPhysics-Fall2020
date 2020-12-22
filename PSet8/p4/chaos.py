@@ -30,6 +30,18 @@ def stable_point(r):
     return x[-200:]
 
 
+def tidy_up(arr):
+    new_arr = [arr[0]]
+    old_value = arr[0]
+
+    for i in range(1, len(arr)):
+        if arr[i] > old_value:
+            new_arr.append(arr[i])
+            old_value = arr[i]
+
+    return new_arr
+
+
 def main():
     """ main body """
     # constants
@@ -48,7 +60,7 @@ def main():
     print(x_fix)
 
     # repeat each value of r, 200 times for the plot
-    r_axis = np.repeat(r_axis, 200)
+    r_axis= np.repeat(r_axis, 200)
 
     # plot
     plt.plot(r_axis, x_fix, ls='', marker='o', ms=1)
@@ -58,6 +70,22 @@ def main():
     plt.savefig("bifurcation.jpg", dpi=200, bbox_inches='tight')
     plt.show()
 
+
+    # ===================================
+    # ==== finding delta and alpha ======
+    # ===================================
+    index_arr = np.where(x_fix - 0.5 <= 0.01)[0]
+    print(index_arr)
+
+    x_cycle = x_fix[index_arr]
+    r_cycle = r_axis[index_arr]
+    r_cycle = tidy_up(r_cycle)
+
+    print('\n\n\n')
+    print('[Info]:main: finding delta: x_cycle =', x_cycle)
+    print('[Info]:main: finding delta: r_cycle =', r_cycle)
+
+    print("[Info]:main:finding delta: ", (r_cycle[3] - r_cycle[2]) / (r_cycle[4] - r_cycle[3]) )
 
 
 if __name__ == "__main__":
