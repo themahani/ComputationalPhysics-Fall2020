@@ -81,7 +81,7 @@ footskip=.25in]{geometry}
 		\centering
 		\includegraphics[width=0.8\linewidth]{../p1/error.jpg}
 		\label{fig:error}
-		\caption{Plot for \emph{delta} vs. \emph{$h$}, the slope is found out to be $0.0036 \pm 0.0003$}
+		\caption{Plot for \emph{$\log(\delta)$} vs. \emph{$\log(h)$}. We can see that for a value of $h$ there's a minimum where the error is optimal.}
 	\end{figure}
 
 	\section{$2^{nd}$ Order ODE}
@@ -109,7 +109,7 @@ footskip=.25in]{geometry}
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.45\linewidth]{../p2/euler.jpg}
-		\includegraphics[width=0.45\linewidth]{../p2/euler_koomer.jpg}
+		\includegraphics[width=0.45\linewidth]{../p2/euler_cromer.jpg}
 		\includegraphics[width=0.45\linewidth]{../p2/verlat.jpg}
 		\includegraphics[width=0.45\linewidth]{../p2/velocity_verlat.jpg}
 		\includegraphics[width=0.45\linewidth]{../p2/beeman.jpg}
@@ -117,7 +117,7 @@ footskip=.25in]{geometry}
 		\caption{$\dot{x}$ vs. $x$ for different methods.}
 	\end{figure}
 	
-	As can be seen from Fig\ref{fig:energy}, the \emph{verlat}, \emph{velocity verlat}, and \emph{beeman} methods have stability for this
+	As can be seen from Fig\ref{fig:energy}, the \emph{euler-cromer}, \emph{verlat}, \emph{velocity verlat}, and \emph{beeman} methods have stability for this
 	problem.
 	
 	\section{Instability in algorithms}
@@ -143,5 +143,14 @@ footskip=.25in]{geometry}
 
 	It can also be seen that for higher values of the time step, the instability manifests much sooner and explodes more rapidly.
 
+	\section{Chaos}
+	Here I made a function \texttt{stable\_point(r)} which applies the function \texttt{f(r, x)} 1500 times and returns the last 200 values.
+	This way we can cover the bifurcations to 128-periodic. Here $f(r, x) = x_{n + 1} = 4rx_{n} (1 - x_{n})$.  The bifurcation plot is available in FIg\ref{fig:bifurcation}
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{../p4/bifurcation.jpg}
+		\label{fig:bifurcation}
+		\caption{bifurcation plot for $f(r, x)$}
+	\end{figure}
 
 \end{document}

@@ -50,7 +50,7 @@ def main():
     time = np.linspace(0, end, count, endpoint=False)
 
     plt.plot(time, record, ls='-.', label='simulation')
-    plt.plot(time, analytical_sol(time), ls='--', label='analytic sol.')
+    plt.plot(time, analytical_sol(time), ls='--', label='analytical sol.')
     plt.xlabel('tau')
     plt.ylabel('charge Q')
     plt.legend()
@@ -62,7 +62,7 @@ def main():
     # =================================
 
     # list of steps to find delta
-    steps = np.power(10, np.linspace(-8, -3, 20))
+    steps = np.power(10, np.linspace(-8, -3, 30))
     # find the expected value of Q using the analytical solution
     x_end = analytical_sol(end)
 

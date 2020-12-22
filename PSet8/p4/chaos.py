@@ -38,7 +38,6 @@ def main():
     r_axis = np.linspace(0.1, 1, n)
 
     # x axis
-    x_fix = np.zeros(200 * n)
     x_fix = np.array([])
 
     # simulate for different r
@@ -48,7 +47,7 @@ def main():
 
     print(x_fix)
 
-    # repeat each value of r 200 times for the plot
+    # repeat each value of r, 200 times for the plot
     r_axis = np.repeat(r_axis, 200)
 
     # plot
