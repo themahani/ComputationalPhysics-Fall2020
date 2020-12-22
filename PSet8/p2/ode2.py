@@ -23,7 +23,7 @@ def main():
 
     # simulate for different methods
     *data['euler'], _ = euler(x_init, acc, step, end)
-    *data['euler_koomer'], _ = euler_koomer(x_init, acc, step, end)
+    *data['euler_cromer'], _ = euler_cromer(x_init, acc, step, end)
     *data['verlat'], _ = verlat(x_init, acc, step, end)
     *data['velocity_verlat'], _ = velocity_verlat(x_init, acc, step, end)
     *data['beeman'], count = beeman(x_init, acc, step, end)

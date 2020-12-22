@@ -61,7 +61,7 @@ def euler(x_init, acc, step, time):
     return x, x_dot, count
 
 
-def euler_koomer(x_init, acc, step, time):
+def euler_cromer(x_init, acc, step, time):
     """ euer method """
     # finding count
     count = int(time / step)
@@ -73,7 +73,7 @@ def euler_koomer(x_init, acc, step, time):
 
     for i in range(count - 1):
         x_dot[i + 1] = x_dot[i] + acc(x[i]) * step
-        x[i + 1] = x[i] + x_dot[i] * step
+        x[i + 1] = x[i] + x_dot[i + 1] * step
 
     return x, x_dot, count
 
