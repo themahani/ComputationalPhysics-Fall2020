@@ -39,6 +39,7 @@ def collision():
 
 
 def animate(i):
+    """ function to animate """
     timestep()
     collision()
     line.set_data(xs, ys)
