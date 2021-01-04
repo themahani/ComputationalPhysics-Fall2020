@@ -29,23 +29,46 @@ class MDSystem:
         # random direction for the velocity of the particles
         self.dots[:, 2] = self.init_vel * np.cos(2 * np.pi * self.dots[:, 3])
         self.dots[:, 3] = self.init_vel * np.cos(2 * np.pi * self.dots[:, 3])
+        self.stabilize_system() # Make sure that the system is stationary in LAB frame
+
+        self.accel = self.calc_accel()  # calculate the acceleration of particles
+
+    def stabilize_system(self):
+        """ make speed of CoM to bee zero """
+        vel_center = np.sum(self.dots[:, 2:], axis=0)
+        print(f'[Info]:MD:Stabilize system: CoM velocity = {vel_center}')
+        self.dots[:, 2:] -= vel_center
+
+    def calc_accel(self):
+        """ return the acceleration of the particles """
+        # find the distance matrix of the particles
+        self.dist_mat = squareform( pdist(self.dots[:, :2], 'euclidean' )) # Distance matrix
+
+        r_c = 2.5   # cutoff radius
+
+        for x_ind, x in enumerate(self.dots[:, 0]):
+            rel_pos = self.dots[:, 0] - x
+            rel_pos[rel_pos < self.size / 2] += self.size
+        return 0
 
     def timestep(self):
-        """ evolve the system by 1 time step using velocity verlet """
-        self.dots[:, :2] += self.dots[:, 2:]
+        """ evolve the system by 1 time step using verlet """
+        _h = 0.0001     # value of time step
+        self.dots[:, :2] += self.dots[:, 2:] * _h + 0.5 * self.accel * _h ** 2   # update position
+        self.dots[:, 2:] += self.accel * _h * 0.5   # update speed partially
+        self.accel = self.calc_accel()  # update acceleration of particles
+        self.dots[:, 2:] += 0.5 * self.accel() * _h # update final speed
 
+        # periodic boundary conditions
         cross_right = self.dots[:, 0] > self.size
         cross_left = self.dots[:, 0] < 0
         cross_up = self.dots[:, 1] > self.size
         cross_down = self.dots[:, 1] < 0
 
-        self.dots[cross_right | cross_left, 2] *= -1
-        self.dots[cross_up | cross_down, 3] *= -1
-
-        self.dots[cross_right, 0] = self.size
-        self.dots[cross_left, 0] = 0
-        self.dots[cross_up, 1] = self.size
-        self.dots[cross_down, 1] = 0
+        self.dots[cross_right, 0] = 0
+        self.dots[cross_left, 0] = self.size
+        self.dots[cross_up, 1] = 0
+        self.dots[cross_down, 1] = self.size
 
     def collision(self):
         """ simulate the interaction of the particles to update the velocities """
@@ -71,7 +94,7 @@ class MDSystem:
     def energy(self):
         """ return the total energy of the system of particles """
         return self.kinetic() + \
-                np.sum(potential(self.dist_mat[self.dist_mat != 0])) / 2
+            np.sum(potential(self.dist_mat[self.dist_mat != 0])) / 2
 
     def animate_system(self):
         """ animate the MD simulation and present it """
@@ -80,11 +103,10 @@ class MDSystem:
             self.timestep()
             self.collision()
             line.set_data(x_particles, y_particles)
-            ax.set_title('step = %s' %i)
+            ax.set_title('step = %s' % i)
             return line,
 
         fig, ax = plt.subplots()
-
 
         ax.set_xlim(0, self.size)
         ax.set_ylim(0, self.size)
@@ -103,26 +125,27 @@ def potential(dist):
     """ take distance r of particles and return the leonard-jones potential """
     return 4 * ( 1 / dist ** 12 - 1 / dist ** 6 )
 
+
 def test():
     """ test the class """
 
 
     md_sys = MDSystem()
-    # md_sys.animate_system()
+    md_sys.animate_system()
 
-    end_time = 1000
+    # end_time = 1000
 
-    energy = np.zeros(end_time)
-    kinetic = np.zeros(end_time)
+    # energy = np.zeros(end_time)
+    # kinetic = np.zeros(end_time)
 
-    for i in range(end_time):
-        md_sys.timestep()
-        md_sys.collision()
-        energy[i] = md_sys.energy()
-        kinetic[i] = md_sys.kinetic()
+    # for i in range(end_time):
+    #     md_sys.timestep()
+    #     md_sys.collision()
+    #     energy[i] = md_sys.energy()
+    #     kinetic[i] = md_sys.kinetic()
 
-    plt.plot(np.linspace(1, end_time, end_time), energy)
-    plt.show()
+    # plt.plot(np.linspace(1, end_time, end_time), energy)
+    # plt.show()
 
 if __name__ == "__main__":
     test()
