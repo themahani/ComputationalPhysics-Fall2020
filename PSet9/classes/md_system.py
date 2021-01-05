@@ -20,12 +20,11 @@ class MDSystem:
         self.dots[:, 1] = ys.copy()
         self.dots[:, :2] = self.size * self.dots[:, :2]
 
-        self.dist_mat = None    # Define the distance matrix for the particles
+        # store relative position (x, y) of particles
+        self.dist_data = np.zeros((self.num_particle, self.num_particle, 2))
+        self.update_rel_pos()   # update dist_data
 
-        # euclidean distance matrix for the particles
-        self.dist_mat = squareform( pdist(self.dots[:, :2], 'euclidean' )) # Distance matrix
-
-        self.init_vel = 0.05  # initial total velocity of the particles
+        self.init_vel = 3  # initial total velocity of the particles
         # random direction for the velocity of the particles
         self.dots[:, 2] = self.init_vel * np.cos(2 * np.pi * self.dots[:, 3])
         self.dots[:, 3] = self.init_vel * np.cos(2 * np.pi * self.dots[:, 3])
@@ -39,17 +38,40 @@ class MDSystem:
         print(f'[Info]:MD:Stabilize system: CoM velocity = {vel_center}')
         self.dots[:, 2:] -= vel_center
 
-    def calc_accel(self):
-        """ return the acceleration of the particles """
-        # find the distance matrix of the particles
-        self.dist_mat = squareform( pdist(self.dots[:, :2], 'euclidean' )) # Distance matrix
-
+    def update_rel_pos(self):
+        """ calc relative x and y for each particle correlation """
         r_c = 2.5   # cutoff radius
 
-        for x_ind, x in enumerate(self.dots[:, 0]):
-            rel_pos = self.dots[:, 0] - x
-            rel_pos[rel_pos < self.size / 2] += self.size
-        return 0
+
+        for i in range(2):  # find particle correlation within r_c for x and y
+            for x_ind, x in enumerate(self.dots[:, i]):
+                rel_pos = -self.dots[:, i] + x
+                is_out = np.absolute(rel_pos) > r_c  # particle out of r_c
+                reflection_out = np.absolute(rel_pos - self.size) > r_c # reflection out of r_c
+                reflection_in = np.absolute(rel_pos - self.size) < r_c  # reflection inside r_c
+                rel_pos[is_out & reflection_out] = 0    # if both the particle and its reflection out, then zeros
+                rel_pos[np.all([is_out & reflection_in, rel_pos > 0], 0)] = \
+                    rel_pos[is_out & reflection_in] - self.size
+                rel_pos[np.all([is_out & reflection_in, rel_pos < 0], 0)] = \
+                    rel_pos[is_out & reflection_in] + self.size
+                self.dist_data[x_ind, :, i] = rel_pos   # update data for class
+
+    def calc_accel(self):
+        """ return the acceleration of the particles """
+        self.update_rel_pos()
+        # calculate distance r**2 = x**2 + y**2
+        rel_dist = self.dist_data[:, :, 0] ** 2 + \
+            self.dist_data[:, :, 1 ** 2]
+        non_zero = rel_dist != 0    # non zeros values of distance
+        accel = np.zeros((self.num_particle, 2))
+        for i in range(2):
+            for j in range(self.num_particle):
+                accel[j] = np.sum(-4 * (-12 / rel_dist[j, non_zero[j]] ** 14 +
+                                    6 / rel_dist[j, non_zero[j]] ** 8) * \
+                    self.dist_data[j, non_zero[j], i])
+
+        return accel
+
 
     def timestep(self):
         """ evolve the system by 1 time step using verlet """
@@ -57,7 +79,7 @@ class MDSystem:
         self.dots[:, :2] += self.dots[:, 2:] * _h + 0.5 * self.accel * _h ** 2   # update position
         self.dots[:, 2:] += self.accel * _h * 0.5   # update speed partially
         self.accel = self.calc_accel()  # update acceleration of particles
-        self.dots[:, 2:] += 0.5 * self.accel() * _h # update final speed
+        self.dots[:, 2:] += 0.5 * self.accel * _h # update final speed
 
         # periodic boundary conditions
         cross_right = self.dots[:, 0] > self.size
@@ -100,8 +122,8 @@ class MDSystem:
         """ animate the MD simulation and present it """
         def animate(i):
             """ function to animate """
-            self.timestep()
-            self.collision()
+            for _ in range(100):
+                self.timestep()
             line.set_data(x_particles, y_particles)
             ax.set_title('step = %s' % i)
             return line,
@@ -126,12 +148,20 @@ def potential(dist):
     return 4 * ( 1 / dist ** 12 - 1 / dist ** 6 )
 
 
+def print_system_info(md_sys):
+    """ print rel pos and accel of particles """
+    print('[Info]:main: md accel at time 0 is:\n', md_sys.accel)
+    print('[Info]:main: md relative x, y in time 0 is:\n', md_sys.dist_data)
+
+
 def test():
     """ test the class """
-
-
     md_sys = MDSystem()
-    md_sys.animate_system()
+    for _ in range(5000):
+        md_sys.timestep()
+    print_system_info(md_sys)
+    md_sys.stabilize_system()
+    # md_sys.animate_system()
 
     # end_time = 1000
 
