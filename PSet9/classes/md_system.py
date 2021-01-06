@@ -34,7 +34,7 @@ class MDSystem:
 
     def stabilize_system(self):
         """ make speed of CoM to bee zero """
-        vel_center = np.sum(self.dots[:, 2:], axis=0)
+        vel_center = np.sum(self.dots[:, 2:], axis=0) / self.num_particle
         print(f'[Info]:MD:Stabilize system: CoM velocity = {vel_center}')
         self.dots[:, 2:] -= vel_center
 
@@ -59,9 +59,10 @@ class MDSystem:
     def calc_accel(self):
         """ return the acceleration of the particles """
         self.update_rel_pos()
+        print('[Info]:MD:calc_accel: rel pos is:\n', self.dist_data)
         # calculate distance r**2 = x**2 + y**2
         rel_dist = self.dist_data[:, :, 0] ** 2 + \
-            self.dist_data[:, :, 1 ** 2]
+            self.dist_data[:, :, 1] ** 2
         non_zero = rel_dist != 0    # non zeros values of distance
         accel = np.zeros((self.num_particle, 2))
         for i in range(2):
@@ -69,6 +70,7 @@ class MDSystem:
                 accel[j] = np.sum(-4 * (-12 / rel_dist[j, non_zero[j]] ** 14 +
                                     6 / rel_dist[j, non_zero[j]] ** 8) * \
                     self.dist_data[j, non_zero[j], i])
+        print('[Info]:MD:calc_accel: accel is: \n', accel)
 
         return accel
 
@@ -150,6 +152,7 @@ def potential(dist):
 
 def print_system_info(md_sys):
     """ print rel pos and accel of particles """
+    print('[Info]:main: md particle data :\n', md_sys.dots)
     print('[Info]:main: md accel at time 0 is:\n', md_sys.accel)
     print('[Info]:main: md relative x, y in time 0 is:\n', md_sys.dist_data)
 
@@ -157,9 +160,10 @@ def print_system_info(md_sys):
 def test():
     """ test the class """
     md_sys = MDSystem()
-    for _ in range(5000):
-        md_sys.timestep()
-    print_system_info(md_sys)
+    for _ in range(1):
+        # print_system_info(md_sys)
+        # md_sys.timestep()
+        md_sys.calc_accel()
     md_sys.stabilize_system()
     # md_sys.animate_system()
 
