@@ -90,7 +90,7 @@ class MDSystem:
         dim = self.dim
         self.dots[:, :dim] += self.dots[:, dim:] * _h + 0.5 * self.accel * _h ** 2   # update position
         self.dots[:, dim:] += self.accel * _h * 0.5   # update speed partially
-        self.accel = self.calc_accel()  # update acceleration of particles
+        self.accel = self.calc_accel() # update acceleration of particles
         self.dots[:, dim:] += 0.5 * self.accel * _h # update final speed
 
         # masking
@@ -118,11 +118,8 @@ class MDSystem:
         """ return the total kinetic energy of the system """
         return 0.5 * np.sum(self.dots[:, 2] ** 2 + self.dots[:, 3] ** 2)
 
-    def energy(self):
-        """ return the total energy of the system of particles """
-        # find the distance matrix of the particles
-        # dist_mat = squareform( pdist(self.dots[:, :2], 'euclidean' )) # Distance matrix
-
+    def potential(self):
+        """ return potential energy of the system """
         dist_mat = np.zeros((self.num_particle, self.num_particle))
         for i in range(self.dim):
             dist_mat += self.dist_data[:, :, i] ** 2
@@ -130,14 +127,21 @@ class MDSystem:
         r_c = 2.5
         is_in = np.all(np.absolute(self.dist_data) < r_c, axis=2)
 
-        return self.kinetic() + \
-            np.sum(potential(dist_mat[dist_mat != 0 & is_in])) / 2
+        return np.sum(potential(dist_mat[dist_mat != 0 & is_in])) / 2
+
+    def energy(self):
+        """ return the total energy of the system of particles """
+        # find the distance matrix of the particles
+        # dist_mat = squareform( pdist(self.dots[:, :2], 'euclidean' )) # Distance matrix
+
+
+        return self.kinetic() + self.potential()
 
     def animate_system(self):
         """ animate the MD simulation and present it """
         def animate(i):
             """ function to animate """
-            for _ in range(100):
+            for _ in range(10):
                 self.timestep()
 
             line.set_data(x_particles, y_particles)
@@ -176,25 +180,23 @@ def test():
     # Preloading
     end = 1000
     md_sys = MDSystem()
+    md_sys.animate_system()
 
-    center_vels = np.zeros((end, md_sys.dim))
-    energy = np.zeros(end)
-    for i in range(end):
-        for _ in range(10):
-            md_sys.timestep()
-        center_vels[i] = md_sys.vel_center()
-        energy[i] = md_sys.energy()
+    # kinetic = np.zeros(end)
+    # potential = np.zeros(end)
+    # for i in range(end):
+    #     # for _ in range(10):
+    #     md_sys.timestep()
+    #     kinetic[i] = md_sys.kinetic()
+    #     potential[i] = md_sys.potential()
 
-    plt.plot(np.linspace(1, end, end), center_vels[:, 0], label=r'$v_x$')
-    plt.plot(np.linspace(1, end, end), center_vels[:, 1], label=r'$v_y$')
-    plt.legend()
-    plt.savefig("CoM_vel.jpg", dpi=200, bbox_inches='tight')
-    plt.show()
+    # plt.plot(np.linspace(1, end, end), kinetic, label='kinetic')
+    # plt.plot(np.linspace(1, end, end), potential, label='potential')
+    # plt.plot(np.linspace(1, end, end), kinetic + potential, label='energy')
+    # plt.legend()
+    # plt.savefig("energy.jpg", dpi=200, bbox_inches='tight')
+    # plt.show()
 
-    plt.plot(np.linspace(1, end, end), energy, label='energy')
-    plt.legend()
-    plt.savefig("energy.jpg", dpi=200, bbox_inches='tight')
-    plt.show()
 
 
 if __name__ == "__main__":
