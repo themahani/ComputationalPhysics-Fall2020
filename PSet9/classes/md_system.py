@@ -8,20 +8,19 @@ from scipy.spatial.distance import squareform, pdist
 
 class MDSystem:
     """ a class containing everything about the MD system """
-    def __init__(self):
+    def __init__(self, L, num, init_pos):
         self.dim = 2
-        self.num_particle = 100     # number of particles in the system
+        self.num_particle = num     # number of particles in the system
         self.dots = np.random.rand(self.num_particle, 4)
-        self.size = 30      # size of the box containing the particles
+        self.size = L      # size of the box containing the particles
 
         # make the particles to be in the left half of the box in order
-        xs = np.repeat(np.linspace(0.1, 0.45, 10), 10)
-        ys = np.tile(np.linspace(0.1, 0.9, 10), 10)
-        # xs = np.array([0.05, 0.1, 0.05, 0.1])
-        # ys = np.array([0.05, 0.05, 0.1, 0.1])
-        self.dots[:, 0] = xs.copy()
-        self.dots[:, 1] = ys.copy()
-        self.dots[:, :self.dim] = self.size * self.dots[:, :self.dim]
+        # xs = np.repeat(np.linspace(0.1, 0.45, 10), 10)
+        # ys = np.tile(np.linspace(0.1, 0.9, 10), 10)
+        # self.dots[:, 0] = xs.copy()
+        # self.dots[:, 1] = ys.copy()
+        # self.dots[:, :self.dim] = self.size * self.dots[:, :self.dim]
+        self.dots[:, :self.dim] = init_pos
         print(self.dots[:, :self.dim])
 
         # store relative position (x, y) of particles
