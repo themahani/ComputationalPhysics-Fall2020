@@ -24,21 +24,33 @@ def main():
     system = MDSystem(**kargs)  # instantiating the system
     num = 50000
 
-    temp = np.zeros(num)
+    # temp = np.zeros(num)
+    pressure = np.zeros(num)
 
     for i in range(num):
         print(f"\r [Info]:main:timestep {i}", end='')
         system.timestep()
-        temp[i] = system.temp()
+        # temp[i] = system.temp()
+        pressure[i] = system.pressure()
 
-    x_axis = np.linspace(1, num, num)
+    x_axis = np.linspace(1, num, num)   # time axis
+    # plot temp
+    # plt.plot(x_axis, temp)
+    # plt.xlabel("time")
+    # plt.ylabel('temperature T')
+    # plt.title(f"number of particles = {system.num_particle}")
+    # plt.grid()
+    # plt.savefig(f"results/temp{system.num_particle}_{num}.jpg",
+    #             dpi=200, bbox_inches='tight')
+    # plt.show()
 
-    plt.plot(x_axis, temp)
+    # plot pressure
+    plt.plot(x_axis, pressure)
     plt.xlabel("time")
-    plt.ylabel('temperature T')
+    plt.ylabel('pressure P')
     plt.title(f"number of particles = {system.num_particle}")
     plt.grid()
-    plt.savefig(f"results/temp{system.num_particle}_{num}.jpg",
+    plt.savefig(f"results/pressure{system.num_particle}_{num}.jpg",
                 dpi=200, bbox_inches='tight')
     plt.show()
 

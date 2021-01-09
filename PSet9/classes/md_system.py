@@ -137,6 +137,28 @@ class MDSystem:
         return np.sum(self.dots[:, self.dim:] ** 2) / ((self.num_particle
                                                    - 1) * self.dim)
 
+    def pressure(self):
+        """ return pressure of the system in a specific time """
+        r_c = 2.5   # cutoff radius
+        # calculate distance r**2 = x**2 + y**2
+        rel_dist_sq = np.zeros((self.num_particle, self.num_particle))
+        for i in range(self.dim):
+            rel_dist_sq += self.dist_data[:, :, i] ** 2
+
+        non_zero = rel_dist_sq != 0    # non zeros values of distance
+
+        is_in = np.all(np.absolute(self.dist_data) < r_c, axis=2)
+
+        # print(non_zero)
+        pressure = self.num_particle * self.temp()
+        for i in range(self.dim):
+            pressure -= np.sum(-4 * (-12 / rel_dist_sq[non_zero & is_in] ** 7 +
+                                     6 / rel_dist_sq[non_zero & is_in]** 4) *
+                                     self.dist_data[non_zero & is_in, i] *
+                                     self.dist_data[non_zero & is_in, i].T)
+
+        return pressure
+
     def animate_system(self):
         """ animate the MD simulation and present it """
         def animate(i):
