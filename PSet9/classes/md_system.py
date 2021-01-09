@@ -130,11 +130,12 @@ class MDSystem:
 
     def energy(self):
         """ return the total energy of the system of particles """
-        # find the distance matrix of the particles
-        # dist_mat = squareform( pdist(self.dots[:, :2], 'euclidean' )) # Distance matrix
-
-
         return self.kinetic() + self.potential()
+
+    def temp(self):
+        """ return the temperature of the system in a specific time """
+        return np.sum(self.dots[:, self.dim:] ** 2) / ((self.num_particle
+                                                   - 1) * self.dim)
 
     def animate_system(self):
         """ animate the MD simulation and present it """

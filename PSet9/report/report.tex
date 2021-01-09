@@ -8,7 +8,7 @@ footskip=.25in]{geometry}
 \usepackage{hyperref}
 \usepackage{physics}
 
-\title{PSet8 Report}
+\title{PSet9 Report}
 \author{Ali Abolhassanzadeh Mahani}
 
 
@@ -87,5 +87,23 @@ footskip=.25in]{geometry}
 	\end{figure}
 
 	\subsubsection{Temperature, Pressure, and equilibrium}
-	Now, we 
+	Now, we turn our heads to a thermodynamic observable, temperature. The thermodynamic 
+	equation for temperature is:
+	\begin{equation}
+		\frac{1}{2} \sum_{i}^{N}\sum_{e} v_{ie}^2 = Nd \frac{1}{2}k_B T
+	\end{equation}
+	where $N$ is the number of particles, $d$ is the dimension of the system (in our case 2) and 
+	T, the temperature. In the system that $k_B$ is $1$, we can rewrite the equation as follows:
+	\begin{equation}
+		\sum_{i}^{N} \sum_{e} v_{ie}^2 = N d T
+	\end{equation}
+	one should take note that in our case, we used a convention, namely that the system is 
+	stabilized (i.e., the CoM velocity is zero). In Thermodynamics this doesn't matter due to the 
+	size of our ensemble, but in MD it matters. So we have:
+	\begin{equation*}
+		N d T \rightarrow (N-1) d T
+	\end{equation*}
+	
+	
+	
 \end{document}
