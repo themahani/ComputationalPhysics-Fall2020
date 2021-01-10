@@ -18,11 +18,12 @@ def main():
     kargs = {
             'num': 100,
             'L': 30,
-            'init_pos': init_pos.T
+            'init_pos': init_pos.T,
+            'init_vel': 0.5
             }
 
     system = MDSystem(**kargs)  # instaciating the system
-    num = 50000
+    num = 10000
 
     kinetic = np.zeros(num)
     potential = np.zeros(num)

@@ -16,9 +16,10 @@ def main():
     ys = np.tile(np.linspace(0.1, 0.9, 10), 10)
     init_pos = np.vstack((xs * size, ys * size))
     kargs = {
-            'num': 100,
-            'L': 30,
-            'init_pos': init_pos.T
+            'num': num_particle,
+            'L': size,
+            'init_pos': init_pos.T,
+            'init_vel': 0.5
             }
 
     system = MDSystem(**kargs)  # instantiating the system

@@ -8,7 +8,7 @@ from scipy.spatial.distance import squareform, pdist
 
 class MDSystem:
     """ a class containing everything about the MD system """
-    def __init__(self, L, num, init_pos):
+    def __init__(self, L, num, init_pos, init_vel):
         self.dim = 2
         self.num_particle = num     # number of particles in the system
         self.dots = np.random.rand(self.num_particle, 4)
@@ -28,7 +28,7 @@ class MDSystem:
                                    self.dim))
         self.update_rel_pos()   # update dist_data
 
-        self.init_vel = 0.5 # initial total velocity of the particles
+        self.init_vel = init_vel    # initial total velocity of the particles
         # random direction for the velocity of the particles
         self.dots[:, 2] = self.init_vel * np.cos(2 * np.pi * self.dots[:, 3])
         self.dots[:, 3] = self.init_vel * np.sin(2 * np.pi * self.dots[:, 3])
@@ -158,10 +158,10 @@ class MDSystem:
 
         pressure = self.num_particle * self.temp()
         for i in range(self.dim):
-            pressure -= np.sum(-4 * (-12 / rel_dist_sq[non_zero & is_in] ** 7 +
-                                     6 / rel_dist_sq[non_zero & is_in]** 4) *
-                                     self.dist_data[non_zero & is_in, i] *
-                                     self.dist_data[non_zero & is_in, i].T)\
+            tmp = rel_dist_sq[non_zero & is_in]
+            pressure -= np.sum(-4 * (-12 / tmp ** 6 + 6 / tmp ** 3) *
+                                     self.dist_data[non_zero & is_in, i] / tmp *
+                                     self.dist_data[non_zero & is_in, i])\
                                     / (2 * self.dim)
 
         return pressure
@@ -216,7 +216,8 @@ def test():
     kargs = {
             'num': 100,
             'L': 30,
-            'init_pos': init_pos.T
+            'init_pos': init_pos.T,
+            'init_vel': 2.0
             }
 
     system = MDSystem(**kargs)  # instantiating the system
