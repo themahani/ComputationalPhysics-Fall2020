@@ -29,7 +29,7 @@ footskip=.25in]{geometry}
 	space that is unnecessary. In order to solve this problem, we come up with characteristic 
 	units for the system. Our parameters are as follows:
 	\begin{equation}
-		m_{arg} = \dots, \; \sigma = 3.4 \times 10^{-10} (m), \; \epsilon \simeq 
+		m_{arg} \sim 10^{-26} (kg), \; \sigma = 3.47 \times 10^{-10} (m), \; \epsilon \simeq 
 	\end{equation}
 	If we make the following changes:
 	\begin{equation}
@@ -90,12 +90,12 @@ footskip=.25in]{geometry}
 	Now, we turn our heads to a thermodynamic observable, temperature. The thermodynamic 
 	equation for temperature is:
 	\begin{equation}
-		\frac{1}{2} \sum_{i}^{N}\sum_{e} v_{ie}^2 = Nd \frac{1}{2}k_B T
+		\frac{1}{2} \sum_{i=1}^{N}\sum_{e=1}^{d} v_{ie}^2 = Nd \frac{1}{2}k_B T
 	\end{equation}
 	where $N$ is the number of particles, $d$ is the dimension of the system (in our case 2) and 
 	T, the temperature. In the system that $k_B$ is $1$, we can rewrite the equation as follows:
 	\begin{equation}
-		\sum_{i}^{N} \sum_{e} v_{ie}^2 = N d T
+		\sum_{i=1}^{N} \sum_{e=1}^{d} v_{ie}^2 = N d T
 	\end{equation}
 	one should take note that in our case, we used a convention, namely that the system is 
 	stabilized (i.e., the CoM velocity is zero). In Thermodynamics this doesn't matter due to the 

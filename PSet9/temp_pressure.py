@@ -22,7 +22,7 @@ def main():
             }
 
     system = MDSystem(**kargs)  # instantiating the system
-    num = 50000
+    num = 10000
 
     # temp = np.zeros(num)
     pressure = np.zeros(num)

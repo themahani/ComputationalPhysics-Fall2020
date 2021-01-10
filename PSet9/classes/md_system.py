@@ -28,7 +28,7 @@ class MDSystem:
                                    self.dim))
         self.update_rel_pos()   # update dist_data
 
-        self.init_vel = 3 # initial total velocity of the particles
+        self.init_vel = 0.5 # initial total velocity of the particles
         # random direction for the velocity of the particles
         self.dots[:, 2] = self.init_vel * np.cos(2 * np.pi * self.dots[:, 3])
         self.dots[:, 3] = self.init_vel * np.sin(2 * np.pi * self.dots[:, 3])
@@ -50,12 +50,16 @@ class MDSystem:
         """ calc relative x and y for each particle correlation """
         r_c = 2.5   # cutoff radius
 
+        # for i in range(self.dim):  # find particle correlation within r_c for x and y
+        #     for x_ind, x in enumerate(self.dots[:, i]):
+        #         rel_pos = -self.dots[:, i] + x      # take distance of particles
+        #         rel_pos = (rel_pos + r_c) % self.size - r_c # minimum distance of particles and reflections
+        #         self.dist_data[x_ind, :, i] = rel_pos   # update data for class
 
-        for i in range(self.dim):  # find particle correlation within r_c for x and y
-            for x_ind, x in enumerate(self.dots[:, i]):
-                rel_pos = -self.dots[:, i] + x      # take distance of particles
-                rel_pos = (rel_pos + r_c) % self.size - r_c # minimum distance of particles and reflections
-                self.dist_data[x_ind, :, i] = rel_pos   # update data for class
+        for x_ind, x in enumerate(self.dots[:, :self.dim]):
+            rel_pos = -self.dots[:, :self.dim] + x      # take distance of particles
+            rel_pos = (rel_pos + r_c) % self.size - r_c # minimum distance of particles and reflections
+            self.dist_data[x_ind, :, :] = rel_pos   # update data for class
 
     def calc_accel(self):
         """ return the acceleration of the particles """
@@ -75,8 +79,11 @@ class MDSystem:
         accel = np.zeros((self.num_particle, self.dim))
         for i in range(self.dim):
             for j in range(self.num_particle):
-                accel[j, i] = np.sum(-4 * (-12 / rel_dist_sq[j, non_zero[j] & is_in[j]] ** 7 +
-                                    6 / rel_dist_sq[j, non_zero[j] & is_in[j]] ** 4) * \
+                temp = rel_dist_sq[j, non_zero[j] & is_in[j]]
+                temp_sq = np.square(temp)
+                temp6 = temp_sq * temp_sq * temp_sq
+                accel[j, i] = np.sum(-4 * (-12 / (temp6 * temp) +
+                                    6 / (temp_sq * temp_sq)) * \
                     self.dist_data[j, non_zero[j] & is_in[j], i])
         # print('[Info]:MD:calc_accel: accel is: \n', accel)
 
@@ -135,7 +142,7 @@ class MDSystem:
     def temp(self):
         """ return the temperature of the system in a specific time """
         return np.sum(self.dots[:, self.dim:] ** 2) / ((self.num_particle
-                                                   - 1) * self.dim)
+                                                   - 1) * self.dim) * 120
 
     def pressure(self):
         """ return pressure of the system in a specific time """
@@ -149,13 +156,13 @@ class MDSystem:
 
         is_in = np.all(np.absolute(self.dist_data) < r_c, axis=2)
 
-        # print(non_zero)
         pressure = self.num_particle * self.temp()
         for i in range(self.dim):
             pressure -= np.sum(-4 * (-12 / rel_dist_sq[non_zero & is_in] ** 7 +
                                      6 / rel_dist_sq[non_zero & is_in]** 4) *
                                      self.dist_data[non_zero & is_in, i] *
-                                     self.dist_data[non_zero & is_in, i].T)
+                                     self.dist_data[non_zero & is_in, i].T)\
+                                    / (2 * self.dim)
 
         return pressure
 
@@ -163,11 +170,11 @@ class MDSystem:
         """ animate the MD simulation and present it """
         def animate(i):
             """ function to animate """
-            for _ in range(10):
+            for _ in range(100):
                 self.timestep()
 
             line.set_data(x_particles, y_particles)
-            ax.set_title('step = %s' % i)
+            ax.set_title(f'step = {i}, temp = {self.temp()} K')
             return line,
 
         fig, ax = plt.subplots()
@@ -201,8 +208,19 @@ def test():
     """ test the class """
     # Preloading
     end = 1000
-    md_sys = MDSystem()
-    md_sys.animate_system()
+    size = 30
+    num_particle = 100
+    xs = np.repeat(np.linspace(0.1, 0.45, 10), 10)
+    ys = np.tile(np.linspace(0.1, 0.9, 10), 10)
+    init_pos = np.vstack((xs * size, ys * size))
+    kargs = {
+            'num': 100,
+            'L': 30,
+            'init_pos': init_pos.T
+            }
+
+    system = MDSystem(**kargs)  # instantiating the system
+    system.animate_system()
 
     # kinetic = np.zeros(end)
     # potential = np.zeros(end)
