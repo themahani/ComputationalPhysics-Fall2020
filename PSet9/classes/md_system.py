@@ -141,10 +141,14 @@ class MDSystem:
 
     def temp(self):
         """ return the temperature of the system in a specific time """
-        return np.sum(self.dots[:, self.dim:] ** 2) / ((self.num_particle
-                                                   - 1) * self.dim) * 120
+        return self.reduced_temp() * 120
 
-    def pressure(self):
+    def reduced_temp(self):
+        """ return reduced temp. """
+        return np.sum(self.dots[:, self.dim:] ** 2) / ((self.num_particle
+                                                   - 1) * self.dim)
+
+    def reduced_pressure(self):
         """ return pressure of the system in a specific time """
         r_c = 2.5   # cutoff radius
         # calculate distance r**2 = x**2 + y**2
@@ -159,12 +163,13 @@ class MDSystem:
         pressure = self.num_particle * self.temp()
         for i in range(self.dim):
             tmp = rel_dist_sq[non_zero & is_in]
-            pressure -= np.sum(-4 * (-12 / tmp ** 6 + 6 / tmp ** 3) *
-                                     self.dist_data[non_zero & is_in, i] / tmp *
-                                     self.dist_data[non_zero & is_in, i])\
+            tmp2 = np.square(tmp)
+            tmp6 = tmp2 * tmp2 * tmp2
+            pressure -= np.sum(-4 * (-12 / tmp6 + 6 / (tmp2 * tmp))) \
                                     / (2 * self.dim)
-
-        return pressure
+                                 # self.dist_data[non_zero & is_in, i] / tmp *
+                                 # self.dist_data[non_zero & is_in, i])\
+        return pressure / self.size ** 2
 
     def animate_system(self):
         """ animate the MD simulation and present it """

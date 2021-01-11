@@ -104,7 +104,29 @@ footskip=.25in]{geometry}
 		N d T \rightarrow (N-1) d T
 	\end{equation*}
 	
+	Now we use the "Virial Theorem" to find and equation for the pressure of the system.
+	\begin{equation}
+		P V = N k_B T - \frac{1}{2d} \sum_{i,j} \vec{F}_{ij}.\vec{r}_{ij}
+	\end{equation}
+	 Now we have an equation to calculate pressure in-time. 
+	 
+	 The values for temp. and pressure are available in Fig~\ref{fig:temp_pressure}
+	 
+	 \begin{figure}[h!]
+		\centering
+		\includegraphics[width=.45\linewidth]{../results/temp100_5000.jpg}
+		\includegraphics[width=.45\linewidth]{../results/pressure100_5000.jpg}
+		\caption{On the left, you can see the plot for temperature over time. the unit for temp. is Kelvin. On the right, you can see the values for 
+		reduced pressure. The unit for time on both plots is $10^{-2} \tau$ where $\tau$ is time in reduced units.
+		the inital value for velocity is $1.5$}
+	 \end{figure}
+ 
+ 	We find the temperature and pressure of the system in equilibrium, by taking the mean value over time. The values are found below:
+ 	\begin{equation*}
+ 		T_{eq} = 84 \pm 3 K, \; P_{eq} = 9.2 \pm 0.4 \text{(reduced unit)}
+ 	\end{equation*}
 	
+	\subsubsection{Velocity Correlation and Relaxation Time}
 	
 	
 	
