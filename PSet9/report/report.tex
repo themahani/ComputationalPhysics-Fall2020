@@ -127,7 +127,30 @@ footskip=.25in]{geometry}
  	\end{equation*}
 	
 	\subsubsection{Velocity Correlation and Relaxation Time}
+	I chose the initial conditions to be the same as in the previous section. The equation for auto-correlation of 
+	velocity is as follows:
+	\begin{equation}
+		C_v = \dots
+	\end{equation}
+	I ran the simulation for 2000 time steps (waiting for the system to reach equilibrium), and then I saved the
+	data for the velocity of particles for every 2 time steps in a file in the \texttt{data/} directory.
 	
+	Then using the file \texttt{velocity\_correlation.py}, I find the correlation and plotted in 
+	Fig~\ref{fig:velocity_correlation}
 	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=.9\linewidth]{../results/velocity_correlation.jpg}
+		\caption{Velocity correlation for different values of seperation $\tau$. The initial velocity in the simulation was 
+			$0.5$.}
+	\end{figure}
 	
+	And so by crossing the auto-correlation curve with the $y = e^{-1}$ line, we find the relation time of the 
+	system, $T$, to be:
+	\begin{equation}
+		T = 2564 \times 10^{-3} \tau = 2.564 \tau, \; \tau \simeq 10^{-12} s \Rightarrow T \simeq 2.564 \times 
+		10^{-12} s
+	\end{equation}
+	
+	\subsection{Phase transition of the system for different Temperatures}
 \end{document}
