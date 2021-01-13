@@ -21,7 +21,6 @@ class MDSystem:
         # self.dots[:, 1] = ys.copy()
         # self.dots[:, :self.dim] = self.size * self.dots[:, :self.dim]
         self.dots[:, :self.dim] = init_pos
-        print(self.dots[:, :self.dim])
 
         # store relative position (x, y) of particles
         self.dist_data = np.zeros((self.num_particle, self.num_particle,
@@ -43,7 +42,7 @@ class MDSystem:
     def stabilize_system(self):
         """ make speed of CoM to be zero """
         vel_center = self.vel_center()
-        print(f'[Info]:MD:Stabilize system: CoM velocity = {vel_center}')
+        # print(f'[Info]:MD:Stabilize system: CoM velocity = {vel_center}')
         self.dots[:, self.dim:] -= vel_center
 
     def update_rel_pos(self):
@@ -160,22 +159,21 @@ class MDSystem:
 
         is_in = np.all(np.absolute(self.dist_data) < r_c, axis=2)
 
-        pressure = self.num_particle * self.temp()
+        pressure = self.num_particle * self.reduced_temp()
         for i in range(self.dim):
             tmp = rel_dist_sq[non_zero & is_in]
             tmp2 = np.square(tmp)
             tmp6 = tmp2 * tmp2 * tmp2
-            pressure -= np.sum(-4 * (-12 / tmp6 + 6 / (tmp2 * tmp))) \
-                                    / (2 * self.dim)
-                                 # self.dist_data[non_zero & is_in, i] / tmp *
-                                 # self.dist_data[non_zero & is_in, i])\
+            pressure -= np.sum(-4 * (-12 / tmp6 + 6 / (tmp2 * tmp))) * \
+                self.num_particle * self.dim / 2
+
         return pressure / self.size ** 2
 
-    def animate_system(self):
+    def animate_system(self, filepath):
         """ animate the MD simulation and present it """
         def animate(i):
             """ function to animate """
-            for _ in range(100):
+            for _ in range(20):
                 self.timestep()
 
             line.set_data(x_particles, y_particles)
@@ -192,9 +190,10 @@ class MDSystem:
 
         line, = ax.plot([], [], 'b.', ms=8)
 
-        ani = animation.FuncAnimation(fig, animate, interval=20, blit=False)
-
-        plt.show()
+        ani = animation.FuncAnimation(fig, animate, interval=20, blit=False,
+                                      save_count=500)
+        print("[Info]:animate_system: saving animation...")
+        ani.save(filepath+".GIF", writer='imagemagick', fps=20, dpi=200)
 
 
 def potential(dist):

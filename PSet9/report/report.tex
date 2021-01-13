@@ -106,7 +106,7 @@ footskip=.25in]{geometry}
 	
 	Now we use the "Virial Theorem" to find and equation for the pressure of the system.
 	\begin{equation}
-		P V = N k_B T - \frac{1}{2d} \sum_{i,j} \vec{F}_{ij}.\vec{r}_{ij}
+		P V = N k_B T - \frac{N d}{2} \sum_{i,j} \vec{F}_{ij}.\vec{r}_{ij}
 	\end{equation}
 	 Now we have an equation to calculate pressure in-time. 
 	 
@@ -123,7 +123,7 @@ footskip=.25in]{geometry}
  
  	We find the temperature and pressure of the system in equilibrium, by taking the mean value over time. The values are found below:
  	\begin{equation*}
- 		T_{eq} = 84 \pm 3 K, \; P_{eq} = 9.2 \pm 0.4 \text{(reduced unit)}
+ 		T_{eq} = 90 \pm 4 K, \; P_{eq} = 14 \pm 20 \text{(reduced unit)}
  	\end{equation*}
 	
 	\subsubsection{Velocity Correlation and Relaxation Time}
@@ -143,6 +143,7 @@ footskip=.25in]{geometry}
 		\includegraphics[width=.9\linewidth]{../results/velocity_correlation.jpg}
 		\caption{Velocity correlation for different values of seperation $\tau$. The initial velocity in the simulation was 
 			$0.5$.}
+		\label{fig:velocity_correlation}
 	\end{figure}
 	
 	And so by crossing the auto-correlation curve with the $y = e^{-1}$ line, we find the relation time of the 
