@@ -56,9 +56,8 @@ def main():
                 dpi=200, bbox_inches='tight')
     plt.show()
 
-    print(f'Equalized Temp. is {np.mean(temp[-3000:])} (+/-) {np.std(temp[-3000:])} K')
+    print(f'\nEqualized Temp. is {np.mean(temp[-3000:])} (+/-) {np.std(temp[-3000:])} K')
     print(f'Equalized pressure is {np.mean(pressure[-3000:])} (+/-) {np.std(pressure[-3000:])}')
-
 
 
 if __name__ == "__main__":

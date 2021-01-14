@@ -29,12 +29,15 @@ def simulate_system(init_vel):
 
     energy = system.energy()
     temp = np.zeros(1000)
+    pressure = np.zeros(1000)
     for i in range(1000):
         for _ in range(10):
             system.timestep()
         temp[i] = system.temp()
+        pressure[i] = system.reduced_pressure()
 
-    return energy, np.mean(temp), np.std(temp)
+    return energy, np.mean(temp), np.std(temp), \
+        np.mean(pressure), np.std(pressure)
 
 
 def main():
@@ -42,16 +45,20 @@ def main():
     velocity = np.linspace(0.1, 2, 40)
 
     temps = np.zeros((40, 2))
+    pressures = np.zeros((40, 2))
     energies = np.zeros(40)
 
     for index, init_vel in enumerate(velocity):
-        print(f"\r[Info]:main: Simulating for the {index + 1}th system of 40 ", end='')
-        energies[index], temps[index, 0], temps[index, 1] = \
+        print(f"\r[Info]:main: Simulating for the {index + 1}th system of 40 ",
+              end='')
+        energies[index], temps[index, 0], temps[index, 1], \
+            pressures[index, 0], pressures[index, 1] = \
             simulate_system(init_vel)
         print(f" {temps[index, 0]}")
 
     np.save("data/temps_phase_transition.npy", temps)
     np.save("data/energies_phase_transition.npy", energies)
+    np.save("data/pressure_phase_transition.npy", pressures)
 
 
 if __name__ == "__main__":

@@ -106,7 +106,7 @@ footskip=.25in]{geometry}
 	
 	Now we use the "Virial Theorem" to find and equation for the pressure of the system.
 	\begin{equation}
-		P V = N k_B T - \frac{N d}{2} \sum_{i,j} \vec{F}_{ij}.\vec{r}_{ij}
+		P V = N k_B T - \frac{1}{2 N d} \sum_{i,j = 1}^{N} \vec{F}_{ij}.\vec{r}_{ij}
 	\end{equation}
 	 Now we have an equation to calculate pressure in-time. 
 	 
@@ -119,23 +119,20 @@ footskip=.25in]{geometry}
 		\caption{On the left, you can see the plot for temperature over time. the unit for temp. is Kelvin. On the right, you can see the values for 
 		reduced pressure. The unit for time on both plots is $10^{-2} \tau$ where $\tau$ is time in reduced units.
 		the inital value for velocity is $1.5$}
+		\label{fig:temp_pressure}
 	 \end{figure}
  
  	We find the temperature and pressure of the system in equilibrium, by taking the mean value over time. The values are found below:
  	\begin{equation*}
- 		T_{eq} = 90 \pm 4 K, \; P_{eq} = 14 \pm 20 \text{(reduced unit)}
+ 		T_{eq} = 87 \pm 5 K, \; P_{eq} = 0.080 \pm 0.005 \text{(reduced unit)}
  	\end{equation*}
 	
 	\subsubsection{Velocity Correlation and Relaxation Time}
-	I chose the initial conditions to be the same as in the previous section. The equation for auto-correlation of 
-	velocity is as follows:
-	\begin{equation}
-		C_v = \dots
-	\end{equation}
+	I chose the initial conditions to be the same as in the previous section.
 	I ran the simulation for 2000 time steps (waiting for the system to reach equilibrium), and then I saved the
 	data for the velocity of particles for every 2 time steps in a file in the \texttt{data/} directory.
 	
-	Then using the file \texttt{velocity\_correlation.py}, I find the correlation and plotted in 
+	Then using the file \texttt{velocity\_correlation.py}, I found the correlation and plotted in 
 	Fig~\ref{fig:velocity_correlation}
 	
 	\begin{figure}[h!]
@@ -153,5 +150,32 @@ footskip=.25in]{geometry}
 		10^{-12} s
 	\end{equation}
 	
+	\subsubsection{State Equation check with the Leonard-Jones gas}
+	In order to check this system with the Leonard-Jones gas, I have shown the P-T plot of the system, available in Fig~\ref{fig:P-T}
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{../results/pressure_temp.jpg}
+		\caption{The P-T plot of the system to check with the Leonard-Jones system.}
+		\label{fig:P-T}
+	\end{figure}
+	
 	\subsection{Phase transition of the system for different Temperatures}
+	In order to see the phase transition of the system we plot the energy E of the system vs. the temperature. And by the change in 
+	$C_v = \derivative{E}{T}$ we can see the phase transitions. I varied the energy and temperature of the system by changing the initial velocity
+	of the particles. For each initial value, I ran the simulation 2000 time steps for the system to reach equilibrium, then, I ran 5000 times and took
+	the temperature of the system and returned the mean and the standard deviation as values and error. The plot is available in 
+	Fig~\ref{fig:phase_transition}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{../results/phase_transition.jpg}
+		\caption{Phase Transition of the MD system. As one can see, from about 80 to 90 Kelvin, the system is in the liquid phase, gas for over 90,
+		and crystal for lower than 80.}
+		\label{fig:phase_transition}
+	\end{figure}
+	
+	\section{Animating the system}
+	Again, I wait 2000 time steps for the system to reach equilibrium and then, I start animating the system.
+	The initial velocity for the crystal phase is $0.5$, for liquid, $1.5$, and for gas $3$. The animations are accessible in the \texttt{animations/}
+	subdirectory.
 \end{document}

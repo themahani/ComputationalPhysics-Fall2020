@@ -49,12 +49,6 @@ class MDSystem:
         """ calc relative x and y for each particle correlation """
         r_c = 2.5   # cutoff radius
 
-        # for i in range(self.dim):  # find particle correlation within r_c for x and y
-        #     for x_ind, x in enumerate(self.dots[:, i]):
-        #         rel_pos = -self.dots[:, i] + x      # take distance of particles
-        #         rel_pos = (rel_pos + r_c) % self.size - r_c # minimum distance of particles and reflections
-        #         self.dist_data[x_ind, :, i] = rel_pos   # update data for class
-
         for x_ind, x in enumerate(self.dots[:, :self.dim]):
             rel_pos = -self.dots[:, :self.dim] + x      # take distance of particles
             rel_pos = (rel_pos + r_c) % self.size - r_c # minimum distance of particles and reflections
@@ -125,10 +119,11 @@ class MDSystem:
 
     def potential(self):
         """ return potential energy of the system """
-        dist_mat = np.zeros((self.num_particle, self.num_particle))
-        for i in range(self.dim):
-            dist_mat += self.dist_data[:, :, i] ** 2
-        dist_mat = np.sqrt(dist_mat)
+        # dist_mat = np.zeros((self.num_particle, self.num_particle))
+        # for i in range(self.dim):
+        #     dist_mat += self.dist_data[:, :, i] ** 2
+        dist_mat = np.sqrt(np.sum(np.square(self.dist_data), axis=2))
+        # dist_mat = np.sqrt(dist_mat)
         r_c = 2.5
         is_in = np.all(np.absolute(self.dist_data) < r_c, axis=2)
 
@@ -160,12 +155,13 @@ class MDSystem:
         is_in = np.all(np.absolute(self.dist_data) < r_c, axis=2)
 
         pressure = self.num_particle * self.reduced_temp()
+
         for i in range(self.dim):
             tmp = rel_dist_sq[non_zero & is_in]
             tmp2 = np.square(tmp)
             tmp6 = tmp2 * tmp2 * tmp2
-            pressure -= np.sum(-4 * (-12 / tmp6 + 6 / (tmp2 * tmp))) * \
-                self.num_particle * self.dim / 2
+            pressure -= np.sum(-4 * (-12 / tmp6 + 6 / (tmp2 * tmp))) / \
+                self.num_particle / self.dim / 2
 
         return pressure / self.size ** 2
 
