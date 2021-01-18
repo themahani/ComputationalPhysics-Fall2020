@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # ===============================================
-# ============== The Ising Class ================
+# ============== The BlumeCapel Class ================
 # ===============================================
 
 
@@ -21,18 +21,11 @@ class BlumeCapel:
         self.D = D
 
 
-    def reset(self, beta):
+    def reset(self, J, D):
         """ reset the to random data for new temp. """
         # self.data = np.random.choice([-1, 1], size=(self.size, self.size))
-        self.beta = beta
-        self.decision = np.exp(- beta * np.array([-8, -4, 0, 4, 8]))
-
-
-    def distro(self, x):
-        """boltzman distribution of energy"""
-        if x > 0:
-            return np.exp(- self.beta * x)
-        return np.power(10, -24)
+        self.J = J
+        self.D = D
 
 
     def decide(self, vert, horz, option):
@@ -89,7 +82,7 @@ class BlumeCapel:
         threshold = np.exp(-3)
         while not relaxed:
             # evolve 100 times
-            for _ in range(100):
+            for _ in range(20):
                 self.metropolis()
                 en.append(self.energy())
 
@@ -110,6 +103,11 @@ class BlumeCapel:
     def magnetization(self):
         """ return absolute value of mean magnetization per spin """
         return np.sum(self.data) / self.size ** 2
+
+
+    def n_hat3(self):
+        """ return hat(N)_3 """
+        return np.sum(1 - self.data ** 2) / self.size ** 2
 
     def spin_cor(self):
         """
@@ -147,63 +145,47 @@ def corr_len(array):
 
 def get_data(ising, step):
     """ take data about energies in the step length of cor_len """
-    energies = np.zeros(100)
     mag = np.zeros(100)
-    spin_cor = np.zeros(100)
+    N3 = np.zeros(100)
     for i in range(100):
         for _ in range(step):
             ising.metropolis()
 
-        energies[i] = ising.energy()
         mag[i] = ising.magnetization()
-        spin_cor[i] = ising.spin_cor()
+        N3[i] = ising.n_hat3()
 
-    return np.mean(energies), np.var(energies), np.mean(mag), np.var(mag), np.mean(spin_cor), np.sqrt(np.var(spin_cor))
+    return np.mean(mag), np.var(mag), np.mean(N3)
 
 # =================================================
 # =================== Simulation ==================
 # =================================================
 
 
-def simulate(length, betas):
+def simulate(length, Js, Ds):
     """ simulate in various temp.s for ising model of length L """
     # Initialize the Ising System
     ising = BlumeCapel(length, 2, 4)
 
-    n = 80
-    mean_energy_beta = np.zeros(n)
-    var_energy_beta = np.zeros(n)
-    mean_magnet_beta = np.zeros(n)
-    var_magnet_beta = np.zeros(n)
-    spin_correlation = np.zeros((n, 2))
+    n = len(Js)
+    m = len(Ds)
+    mean_magnet_beta = np.zeros((n, m))
+    var_magnet_beta = np.zeros((n, m))
+    mean_n3 = np.zeros((n, m))
+    ksi = np.zeros((n, m))
 
-    for index in range(len(betas)):
-        ising.reset(betas[index])
-        print("\n[Info]:main: beta =", betas[index])
-        # equalie the system
-        ising.equalize()
+    for j in range(len(Js)):
+        for k in range(len(Ds)):
+            ising.reset(Js[j], Ds[k])
+            print(f"\n[Info]:main: J = {Js[j]}, D = {Ds[k]}")
+            # equalie the system
+            ising.equalize()
 
-        # Find auto correlation length
-        m = 100
-        en = np.zeros(m)
-        for i in range(m):
-            ising.metropolis()
-            en[i] = ising.energy()
-        cor_len = corr_len(en)
-        print("[Info]:main: corr_len =", cor_len)
+            # get data
+            mean_magnet_beta[j, k], var_magnet_beta[j, k],\
+                mean_n3[j, k] = get_data(ising, 1)
 
-        # get data
-        mean_energy_beta[index], var_energy_beta[index], \
-            mean_magnet_beta[index], var_magnet_beta[index], \
-            spin_correlation[index, 0], \
-            spin_correlation[index, 1] = get_data(ising, 10)
 
-    # calculate ksi and heat capacity
-    ksi = betas * var_magnet_beta
-    heat_capacity = betas ** 2 * var_energy_beta
-
-    return mean_energy_beta, mean_magnet_beta, \
-        ksi, heat_capacity, spin_correlation
+    return mean_magnet_beta, var_magnet_beta, mean_n3
 
 # =================================================
 # ==================== Main =======================
@@ -212,18 +194,16 @@ def simulate(length, betas):
 
 def main():
     """Main body"""
-    length = 10
-    system = BlumeCapel(length, 0.2, 0.5)
-    end = 200
-    energy = np.zeros(end)
+    length = 20
+    system = BlumeCapel(length, 2, 4)
+    Js = np.linspace(2, 0.2, 10)
+    Ds = np.linspace(4, 0.5, 10)
 
-    for i in range(end):
-        system.metropolis()
-        energy[i] = system.energy()
+    mean_mag, var_mag, mean_n3 = simulate(length, Js, Ds)
 
-
-    plt.plot(np.linspace(1, end, end), energy)
-    plt.show()
+    np.save(f"data/mean_mag_{length}.npy", mean_mag)
+    np.save(f"data/var_mag_{length}.npy", var_mag)
+    np.save(f"data/mean_n3_{length}.npy", mean_n3)
 
 
 
