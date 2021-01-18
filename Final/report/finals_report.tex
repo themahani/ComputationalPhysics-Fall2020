@@ -71,8 +71,10 @@ footskip=.25in]{geometry}
 			T' &= k_B T
 		\end{aligned}
 	\end{equation}
-	
+
+	\newpage
 	The values for the constanst is as follows:
+	
 	\begin{equation}
 		\begin{aligned}
 			\epsilon &\simeq 15.03 \times 10^{-22} J,\\
@@ -143,12 +145,47 @@ $\text{temp.} \; T$ & $\frac{\epsilon}{k_B}$ & $117.8$\\
 	In order to simulate this problem, we tried modifying Sina's MD simulation code since it was faster than the others. In this code, we chnaged the 
 	initial position of the particles, the side length, and other parameters. We added matrices for neghibors and changed the potential to be of 
 	the form of the problem at hand. 
+	
+	This \texttt{SingleAtomMD} class has several features. the \texttt{render()} method, evolves the system and creates several file types with the
+	same name and different extensions. The \texttt{.info} file, stores general data about the parameters of the system in \emph{JSON} format.
+	The \texttt{.data} file, stores the values for temperature, pressure, mean neighbors, etc., and the \texttt{.traj} file, stores the velocity and
+	position of the particles in every recorded time frame. These values are written in \emph{binary} to take less space and be more efficient.
+	
+	Then there's the \texttt{DataAnalysis} class, that reads the data from the generated files, and compiles the data. Then, it returns a \texttt{data}
+	object that stores all the data from the files and contains methods to \texttt{animate} the system, return \texttt{mean\_neighbors}, etc. .
+	
 	\subsection{Part A}
 	This section of the problem is pretty much straightforward. I used the \texttt{eval()} built-in function in python to calculate the values for 
 	the side of the system for various values of area percentage. Then, I stored them in a dictionary and printed them into the console.
-	
+		
 	The results are below:\\
-	\texttt{\{0.4: 9.617692030835672, 0.7: 7.270291799999699, 0.8: 6.800735254367722, 0.9: 6.411794687223781, 1.0: 6.082762530298219\}}
+	\texttt{\{0.4: 9.617692030835672, 0.7: 7.270291799999699, 0.8: 6.800735254367722,\\ 0.9: 6.411794687223781, 1.0: 6.082762530298219\}}
+	\subsection{Part B}
+	For this section, we took the values derived in the previous section, and simulated the problem for 6000 time steps to reach equilibrium. Then,
+	we plotted the mean neighbors over time in a graph. (Fig~\ref{fig:mean_neighbors})
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=.8\linewidth]{../p3/results/mean_neighbors.jpg}
+		\caption{We can see that all the systems reach equilibrium at about 4 time units.}
+		\label{fig:mean_neighbors}
+	\end{figure}
+	
+	\subsection{Part C}
+	In this section, in order to make more accurate conclusions, we made ensembles of size 10 for each value of area percentage and took the mean
+	and stdev (as error). The plot is available in Fig~\ref{fig:eq_mean_neighbors}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=.8\linewidth]{../p3/results/eq_mean_neighbors.jpg}
+		\caption{We can see the phase transition that accures at about 0.9.}
+		\label{fig:eq_mean_neighbors}
+	\end{figure}
+
+	\subsection{Part D}
+	ُThis phase transition is know as a \emph{first-order phase transition driven by fluctuations}. With increasing temperature, the critical value of 
+	area percentage decreases. 
+
 	\section{Problem 4}
 	I implemented the \emph{euler} and \emph{backward euler} in the file \texttt{eulers.py}. Then, in \texttt{main.py}, I import them and use them
 	to calculate the results. Both methods store and return an array for \texttt{time}, \texttt{x}, \texttt{x\_dot}, and \texttt{count} which is the l
