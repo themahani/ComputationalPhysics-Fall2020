@@ -134,6 +134,8 @@ $\text{temp.} \; T$ & $\frac{\epsilon}{k_B}$ & $117.8$\\
 		// set periodic boundary conditions that if a particle moves out, comes in from the other side\\ \\
 		def temp():\\
 		// take sum of square of velocities and divide by 3 * 127 \\ \\
+		def pressure():\\
+		return (128 * temp() - sum(F\_ij dot r\_ij) * N * 3 / 2) / V // where V is the volume of the box\\ \\
 	}
 
 	There's also a fully functional code for this in \texttt{p2/} directory. The only necessity is to specify the initial velocity and the positions. One can 
@@ -146,7 +148,7 @@ $\text{temp.} \; T$ & $\frac{\epsilon}{k_B}$ & $117.8$\\
 	initial position of the particles, the side length, and other parameters. We added matrices for neghibors and changed the potential to be of 
 	the form of the problem at hand. 
 	
-	This \texttt{SingleAtomMD} class has several features. the \texttt{render()} method, evolves the system and creates several file types with the
+	This \texttt{LangevinHarmonic} class has several features. the \texttt{render()} method, evolves the system and creates several files with the
 	same name and different extensions. The \texttt{.info} file, stores general data about the parameters of the system in \emph{JSON} format.
 	The \texttt{.data} file, stores the values for temperature, pressure, mean neighbors, etc., and the \texttt{.traj} file, stores the velocity and
 	position of the particles in every recorded time frame. These values are written in \emph{binary} to take less space and be more efficient.
@@ -159,7 +161,7 @@ $\text{temp.} \; T$ & $\frac{\epsilon}{k_B}$ & $117.8$\\
 	the side of the system for various values of area percentage. Then, I stored them in a dictionary and printed them into the console.
 		
 	The results are below:\\
-	\texttt{\{0.4: 9.617692030835672, 0.7: 7.270291799999699, 0.8: 6.800735254367722,\\ 0.9: 6.411794687223781, 1.0: 6.082762530298219\}}
+	\texttt{\{0.4: 26.95353967742715, 0.7: 20.374960839824098, 0.8: 19.059030682889404, \\0.9: 17.9690264516181, 1.0: 17.04691527687798\}}
 	\subsection{Part B}
 	For this section, we took the values derived in the previous section, and simulated the problem for 6000 time steps to reach equilibrium. Then,
 	we plotted the mean neighbors over time in a graph. (Fig~\ref{fig:mean_neighbors})
@@ -178,7 +180,7 @@ $\text{temp.} \; T$ & $\frac{\epsilon}{k_B}$ & $117.8$\\
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=.8\linewidth]{../p3/results/eq_mean_neighbors.jpg}
-		\caption{We can see the phase transition that accures at about 0.9.}
+		\caption{I can't see any phase transitions.}
 		\label{fig:eq_mean_neighbors}
 	\end{figure}
 

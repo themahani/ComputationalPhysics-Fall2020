@@ -1,13 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import scipy.constants as CONSTANTS
 import math
 import json
 import os
 
 
-class SingleAtomMD:
+class LangevinHarmonic:
     def __init__(self, length, number, mu, mass, k, v_max, radii, T, h=10 ** -3, saving_period=10, name='MD'):
         self.length = length
         self.length_half = self.length / 2
@@ -23,14 +22,16 @@ class SingleAtomMD:
         self.saving_period = saving_period
         self.name = name
         self.reduced_time = 0
-        self._file_base_name = f'{self.name}_{self.length}_{self.number}_{v_max}_{self.h}_{radii}'
+        self._file_base_name = f'{self.name}_{self.length}_{self.number}_{self.k}_{self.v_max}_{self.radii}_{T}_{self.h}'
 
         self.positions = np.zeros((2, self.number))
-        self._place_particles_regularly()
+        self._place_particles_randomly()
         self._periodic_boundaries()
 
         self.radii_sizes = np.zeros(self.number)
+        self._total_radii = np.zeros((self.number, self.number))
         self._assign_random_radii()
+        self._assign_total_radii()
 
         self.velocities = np.zeros((2, self.number))
         self._assign_initial_velocities()
@@ -46,7 +47,6 @@ class SingleAtomMD:
         self._update_accelerators()
 
         self._reduced_temperature = None
-        self._reduced_volume = None
 
         self._initialize_files()
 
@@ -54,6 +54,10 @@ class SingleAtomMD:
         n = int(self.number / len(self.radii))
         self.radii_sizes = np.repeat(self.radii, n)
         np.random.shuffle(self.radii_sizes)
+
+    def _assign_total_radii(self):
+        tiled_radii = np.tile(self.radii_sizes, (self.number, 1))
+        self._total_radii = tiled_radii + np.transpose(tiled_radii)
 
     def _initialize_files(self):
         file = open(f'{self._file_base_name}.info', 'w')
@@ -70,7 +74,8 @@ class SingleAtomMD:
             'saving_period': self.saving_period,
             'data_size': np.dtype(float).itemsize,
             'trajectory': ['positions', 'velocities'],
-            'data': ['temperature', 'mean_neighbors']
+            'data': ['temperature', 'mean_neighbors'],
+            'radii_sizes': self.radii_sizes.tolist(),
         }
         json.dump(info, file, indent=True)
         file.close()
@@ -112,11 +117,8 @@ class SingleAtomMD:
 
     def _update_adjacency_matrix(self):
         self._adjacency_matrix[:] = 0
-        tiled_radii = np.tile(self.radii_sizes, (self.number, 1))
-        total_radii = tiled_radii + np.transpose(tiled_radii)
-
         distances = np.sqrt(np.sum(np.square(self._positions_diff), axis=0))
-        neighbors_indexes = distances < total_radii
+        neighbors_indexes = distances < self._total_radii
         self._adjacency_matrix[neighbors_indexes] = 1
         np.fill_diagonal(self._adjacency_matrix, 0)
 
@@ -183,7 +185,7 @@ class SingleAtomMD:
         for axis in range(2):
             self.velocities[axis] -= velocity_mean[axis]
 
-    def _place_particles_regularly(self):
+    def _place_particles_randomly(self):
         self.positions = np.random.rand(2, self.number) * self.length
 
     def _assign_initial_velocities(self):
@@ -219,6 +221,7 @@ class DataAnalysis:
         self.h = info['h']
         self.saving_period = info['saving_period']
         self.data_size = info['data_size']
+        self.radii_sizes = info['radii_sizes']
         self.trajectory_struct = info['trajectory']
         self.data_struct = info['data']
         self._pos_vel_size = 2 * self.number * self.data_size
@@ -230,7 +233,7 @@ class DataAnalysis:
         self._reduced_temperature_error = None
         self._mean_neighbor = None
         self._mean_neighbor_error = None
-        self._equilibrium_index = self.sample_numbers / 2
+        self._equilibrium_index = int(9 * self.sample_numbers / 10)
 
     def _process_info_file(self):
         file = open(f'{self.file_base_name}.info', 'r')
@@ -350,7 +353,7 @@ class DataAnalysis:
 
         plt.plot(times, temperatures)
         plt.xlabel(r'Time $(\times \tau)$')
-        plt.ylabel(r'T $(\times \epsilon / k_B)$')
+        plt.ylabel(r'T')
         plt.savefig(f'{self.file_base_name}_temperatures.jpg')
         plt.show()
 
