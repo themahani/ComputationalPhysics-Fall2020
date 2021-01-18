@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 def main():
     """ main body """
-    length = 10
+    length = 20
     mean_mag = np.load(f"data/mean_mag_{length}.npy")
     var_mag = np.load(f"data/var_mag_{length}.npy")
     mean_n3 = np.load(f"data/mean_n3_{length}.npy")
