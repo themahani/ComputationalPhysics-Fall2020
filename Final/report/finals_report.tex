@@ -137,6 +137,18 @@ $\text{temp.} \; T$ & $\frac{\epsilon}{k_B}$ & $117.8$\\
 	There's also a fully functional code for this in \texttt{p2/} directory. The only necessity is to specify the initial velocity and the positions. One can 
 	just change the value of \texttt{self.dim} to $3$ and the code is ready to simulate the 3-D version of Argon atoms.
 
+	\section{Problem 3}
+	\textbf{Group members:} Ali Abolhassanzadeh Mahani, Sina Moammar, Shabnaz Ghaffari
+	
+	In order to simulate this problem, we tried modifying Sina's MD simulation code since it was faster than the others. In this code, we chnaged the 
+	initial position of the particles, the side length, and other parameters. We added matrices for neghibors and changed the potential to be of 
+	the form of the problem at hand. 
+	\subsection{Part A}
+	This section of the problem is pretty much straightforward. I used the \texttt{eval()} built-in function in python to calculate the values for 
+	the side of the system for various values of area percentage. Then, I stored them in a dictionary and printed them into the console.
+	
+	The results are below:\\
+	\texttt{\{0.4: 9.617692030835672, 0.7: 7.270291799999699, 0.8: 6.800735254367722, 0.9: 6.411794687223781, 1.0: 6.082762530298219\}}
 	\section{Problem 4}
 	I implemented the \emph{euler} and \emph{backward euler} in the file \texttt{eulers.py}. Then, in \texttt{main.py}, I import them and use them
 	to calculate the results. Both methods store and return an array for \texttt{time}, \texttt{x}, \texttt{x\_dot}, and \texttt{count} which is the l
