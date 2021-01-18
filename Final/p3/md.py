@@ -113,7 +113,7 @@ class LangevinHarmonic:
         return np.random.normal(0, 1, (2, self.number)) * np.sqrt(2 * self.mu * self.T / self.h)
 
     def _update_accelerators(self):
-        self.accelerators = -self.mu * self.velocities + self._generate_noises() - self.k * np.sum(self._adjacency_matrix * self._positions_diff, axis=1)
+        self.accelerators = -self.mu * self.velocities + self._generate_noises() + self.k * np.sum(self._adjacency_matrix * self._positions_diff, axis=1)
 
     def _update_adjacency_matrix(self):
         self._adjacency_matrix[:] = 0
