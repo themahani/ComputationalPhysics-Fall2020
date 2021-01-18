@@ -14,6 +14,44 @@ footskip=.25in]{geometry}
 
 \begin{document}
 	\maketitle
+	\section{Problem 1}
+	\subsection{Introduction}
+	I made the \texttt{BlumeCapel} class with init function that takes values of J, D, and length L, and  creates a system with random spins with 
+	side length $L$. In each \texttt{metropolis()} time step, the system gives all of the cells (ammortized) a chance to change spin. since we have
+	2 options to change to, we take one randomly and then use the metropolis \texttt{decision()}  method to see if we will change the spin. For the 
+	system to reach equilibrium, I devised a method called \texttt{eqaulize()} that evolves the system 20 time steps in each iteration, and saves
+	the energy of the system. Then, it finds the auto-correlation of the energies and if the it's lower than a threshold, the system is equalized. 
+	
+	I made the \texttt{get\_data()} method, to take data from the equalized system in each \texttt{step} time steps. I also made the 
+	\texttt{simulate()} method, that simulated the system to various values of J and D and returns the collected data. I then save the data to
+	a \texttt{.npy} file in the \texttt{data/} subdirectory and use the \texttt{analysis.py} file to draw the plats.
+	
+	\subsection{Part A}
+	I plotted the change in each variable, over various D, for different values of J. (Fig~\ref{fig:chi_10}, ~\ref{fig:n3_10}, ~\ref{fig:mag_10})
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=.8\linewidth]{../p1/results/chi_10.jpg}
+		\caption{We can see that the critical value of D changes with J}
+		\label{fig:chi_10}
+	\end{figure}
+
+	\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.8\linewidth]{../p1/results/mean_n3_10.jpg}
+	\caption{We can see that the critical value of D changes with J}
+	\label{fig:n3_10}
+\end{figure}
+
+	\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.8\linewidth]{../p1/results/magnetization_10.jpg}
+	\caption{We can see that the critical value of D changes with J}
+	\label{fig:mag_10}
+\end{figure}
+	
+	\subsection{Part B}
+	for $L = \{20, 40\}$, the runtime was too high and couldn't complete the data collection in time.
 	\section{Problem 2}
 	\subsection{Theory}
 	The leonard-Jones potential is as follows:
@@ -209,5 +247,33 @@ $0.1$ &$0.000129699$  & $-169639$ & $0.00011444$ & $-2.2575$ \\
 			runtime is about 10 times that of euler.}
 		\label{tab:my_method}
 	\end{table}
+
+	\section{Problem 5}
+	I made a \texttt{System} class that takes the values for \texttt{r}, and makes the system. the \texttt{system\_play()} method randomly 
+	matches the players into pairs. Then, these pairs play with each other and if their strategies differ, they both change their strategy for the next
+	step. The \texttt{next\_step()} method plays the system for one step and updates the value of $Q$. Note that in \texttt{\_\_init\_\_()}, 
+	\texttt{r} players have fixed strategies.
+	\subsection{Part A}
+	Here I plot the values for Q and the strategy of player 50 in the system. (Fig~\ref{fig:r_zero})
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=.45\linewidth]{../p5/results/Q.jpg}
+		\includegraphics[width=.45\linewidth]{../p5/results/state50.jpg}
+		\caption{As one  can see the system is dynamic and the states changes but the value for Q is fixed. This is due to the dynamic of the players,
+		since if their strategies differ, they \emph{both} change strategy results in no change in Q}
+		\label{fig:r_zero}
+	\end{figure}
+	
+	\subsection{Part B}
+	Here I plot the values of Q for the systems with \texttt{r} fixed players, varied from 0 to 10 for 50 time steps. (Fig~\ref{fig:Q})
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{../p5/results/Q_r.jpg}
+		\caption{Now since some of the players are fixated on their strategies, $Q$ varies with time. We see that for intermediate values of r, 
+		the system is divergent.}
+		\label{fig:Q}
+	\end{figure}
 
 \end{document}
