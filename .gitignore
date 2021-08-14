@@ -1,7 +1,7 @@
 # images generated for the project
-*.jpg
-*.jpeg
-*.png
+# *.jpg
+# *.jpeg
+# *.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
