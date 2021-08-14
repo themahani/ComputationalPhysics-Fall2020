@@ -138,7 +138,6 @@ dmypy.json
 *.out
 **/report/*.log
 *.synctex.gz
-*.pdf
 
 # PSet Upload files
 *.zip
