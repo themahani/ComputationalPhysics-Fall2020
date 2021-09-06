@@ -1,12 +1,12 @@
 # Problem Set 5 -- Random Number Generation
 
 ## 1 -- Random Number Generator
-- In the programming language of your choice, call a function to generate random numbers from 0 to 9. 
-put this function in a loop of $N$ repetitions and draw the histogram plot of the returned numbers. 
+- In the programming language of your choice, call a function to generate random numbers from 0 to 9.
+put this function in a loop of $N$ repetitions and draw the histogram plot of the returned numbers.
 If this generator is working correctly, the height of each bin in your histogram should be $N/10$. Is it true?
 
 - Show that the standard deviation from the number above is related to the inverse square root of $N$:
-$\frac{\sigma}{N}$ \sim \frac{1}{\root{N}}
+<img src="https://render.githubusercontent.com/render/math?math=$\frac{\sigma}{N}$ \sim \frac{1}{\root{N}}">
 
 - Can you find any similarities between this exercise and deposition?
 
